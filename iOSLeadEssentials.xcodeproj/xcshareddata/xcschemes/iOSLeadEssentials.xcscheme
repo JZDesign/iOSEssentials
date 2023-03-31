@@ -50,6 +50,16 @@
                ReferencedContainer = "container:iOSLeadEssentials.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "EssentialFeedTests"
+               BuildableName = "EssentialFeedTests"
+               BlueprintName = "EssentialFeedTests"
+               ReferencedContainer = "container:EssentialFeed">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
