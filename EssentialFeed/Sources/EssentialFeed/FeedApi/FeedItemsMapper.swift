@@ -27,7 +27,7 @@ internal struct FeedItemsMapper {
     }
 }
 
-fileprivate extension RemoteFeedLoader.Item {
+fileprivate extension RemoteFeedLoader.Item { 
     var item: FeedItem {
         .init(id: id, description: description, location: location, imageURL: image)
     }
