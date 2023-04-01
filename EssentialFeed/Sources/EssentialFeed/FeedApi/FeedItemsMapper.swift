@@ -22,7 +22,7 @@ internal struct FeedItemsMapper {
             
             return .success(items)
         } catch {
-            return .failure(.invalidData)
+            return .failure(RemoteFeedLoader.Error.invalidData)
         }
     }
 }

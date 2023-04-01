@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class RemoteFeedLoader {
+public final class RemoteFeedLoader: FeedLoader {
     let url: URL
     let client: HttpClient
 
@@ -23,7 +23,7 @@ public final class RemoteFeedLoader {
             case .success(let (data, response)):
                 completion(FeedItemsMapper.map(data, from: response))
             case .failure(_):
-                completion(.failure(.connectivity))
+                completion(.failure(Error.connectivity))
             }
         }
     }
@@ -33,7 +33,7 @@ public final class RemoteFeedLoader {
         case invalidData
     }
     
-    public typealias Result = Swift.Result<[FeedItem], RemoteFeedLoader.Error>
+    public typealias Result = LoadFeedResult
 }
 
 internal extension RemoteFeedLoader {
