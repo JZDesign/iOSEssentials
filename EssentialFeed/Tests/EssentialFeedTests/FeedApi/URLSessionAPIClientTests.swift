@@ -64,16 +64,16 @@ final class URLSessionAPIClientTests: XCTestCase {
         XCTAssertNotNil(resultErrorFor(data: nil, response: nonHTTPURLResponse(), error: nil))
         XCTAssertNotNil(resultErrorFor(data: nil, response: anyHTTPURLResponse(), error: nil))
         XCTAssertNotNil(resultErrorFor(data: anyData(), response: nil, error: nil))
-        XCTAssertNotNil(resultErrorFor(data: anyData(), response: nil, error: anyError()))
-        XCTAssertNotNil(resultErrorFor(data: nil, response: nonHTTPURLResponse(), error: anyError()))
-        XCTAssertNotNil(resultErrorFor(data: nil, response: anyHTTPURLResponse(), error: anyError()))
-        XCTAssertNotNil(resultErrorFor(data: anyData(), response: nonHTTPURLResponse(), error: anyError()))
-        XCTAssertNotNil(resultErrorFor(data: anyData(), response: anyHTTPURLResponse(), error: anyError()))
+        XCTAssertNotNil(resultErrorFor(data: anyData(), response: nil, error: anyNSError()))
+        XCTAssertNotNil(resultErrorFor(data: nil, response: nonHTTPURLResponse(), error: anyNSError()))
+        XCTAssertNotNil(resultErrorFor(data: nil, response: anyHTTPURLResponse(), error: anyNSError()))
+        XCTAssertNotNil(resultErrorFor(data: anyData(), response: nonHTTPURLResponse(), error: anyNSError()))
+        XCTAssertNotNil(resultErrorFor(data: anyData(), response: anyHTTPURLResponse(), error: anyNSError()))
         XCTAssertNotNil(resultErrorFor(data: anyData(), response: nonHTTPURLResponse(), error: nil))
     }
 
     func test_getFromURL_failsOnRequestError() {
-        let error = NSError(domain: #function, code: 1_000_000)
+        let error = anyNSError()
         let receivedError = resultErrorFor(data: nil, response: nil, error: error)! as NSError
         XCTAssertEqual(receivedError.domain, error.domain)
         XCTAssertEqual(receivedError.code, error.code)

@@ -30,7 +30,7 @@ extension XCTestCase {
         Data("any data".utf8)
     }
     
-    func anyError() -> NSError {
+    func anyNSError() -> NSError {
         NSError(domain: #function, code: #line)
     }
     
