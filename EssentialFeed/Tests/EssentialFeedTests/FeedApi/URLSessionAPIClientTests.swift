@@ -19,9 +19,13 @@ class URLSessionHttpClient {
         session.dataTask(with: url, completionHandler: { _, _, error in
             if let error {
                 completion(.failure(error))
+            } else {
+                completion(.failure(UnexpectedValuesRepresentation()))
             }
         }).resume()
     }
+    
+    private class UnexpectedValuesRepresentation: Error {}
 }
 
 final class URLSessionAPIClientTests: XCTestCase {
@@ -55,6 +59,22 @@ final class URLSessionAPIClientTests: XCTestCase {
         wait(for: [expectation], timeout: 0.1)
     }
     
+    func test_getFromURL_failsOnAllNilValues() {
+        URLProtocolStub.stub(data: nil, response: nil, error: nil)
+        
+        let expectation = expectation(description: #function)
+        makeSUT().get(from: createURL()) { result in
+            switch result {
+            case .failure:
+                break
+            default:
+                XCTFail("Expected failure, got \(result) instead")
+            }
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 0.1)
+    }
+
     func test_getFromURL_failsOnRequestError() {
         let url = createURL()
         let error = NSError(domain: #function, code: 1_000_000)
