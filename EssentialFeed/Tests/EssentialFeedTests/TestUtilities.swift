@@ -7,9 +7,31 @@ extension XCTestCase {
             XCTAssertNil(instance, file: file, line: line)
         }
     }
+
     func createAndTrackMemoryLeaks<T: AnyObject>(_ initializer: @autoclosure () -> T, file: StaticString = #file, line: UInt = #line) -> T {
         let instance = initializer()
         trackMemoryLeaks(instance)
         return instance
     }
+    
+    func anyURL() -> URL {
+        URL(string: "https://a-url.com")!
+    }
+    
+    func nonHTTPURLResponse() -> URLResponse {
+        URLResponse(url: anyURL(), mimeType: nil, expectedContentLength: 1, textEncodingName: nil)
+    }
+    
+    func anyHTTPURLResponse() -> HTTPURLResponse {
+        HTTPURLResponse(url: anyURL(), mimeType: nil, expectedContentLength: 1, textEncodingName: nil)
+    }
+    
+    func anyData() -> Data {
+        Data("any data".utf8)
+    }
+    
+    func anyError() -> NSError {
+        NSError(domain: #function, code: #line)
+    }
+    
 }
