@@ -29,7 +29,7 @@ final class URLSessionAPIClientTests: XCTestCase {
         let url = URL(string: "https://a-url.com")!
         let error = NSError(domain: #function, code: 1_000_000)
         URLProtocolStub.startInterceptingRequests()
-        URLProtocolStub.stub(url: url, error: error)
+        URLProtocolStub.stub(url: url, data: nil, response: nil, error: error)
 
         let sut = URLSessionHttpClient()
 
@@ -63,8 +63,8 @@ final class URLSessionAPIClientTests: XCTestCase {
             stubs = [:]
         }
 
-        static func stub(url: URL, error: Error? = nil) {
-            stubs[url] = Stub(error: error)
+        static func stub(url: URL, data: Data?, response: URLResponse?, error: Error?) {
+            stubs[url] = Stub(data: data, response: response, error: error)
         }
 
         override class func canInit(with request: URLRequest) -> Bool {
@@ -87,6 +87,8 @@ final class URLSessionAPIClientTests: XCTestCase {
         override func stopLoading() {}
 
         private struct Stub {
+            let data: Data?
+            let response: URLResponse?
             let error: Error?
         }
     }
