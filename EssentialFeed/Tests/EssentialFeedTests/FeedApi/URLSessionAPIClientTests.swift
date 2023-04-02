@@ -36,7 +36,7 @@ final class URLSessionAPIClientTests: XCTestCase {
     }
     
     func test_getFromURL_performGETRequestWithURL() {
-        let url = URL(string: "https://a-url.com")!
+        let url = createURL()
         
         URLProtocolStub.stub(
             data: nil,
@@ -56,7 +56,7 @@ final class URLSessionAPIClientTests: XCTestCase {
     }
     
     func test_getFromURL_failsOnRequestError() {
-        let url = URL(string: "https://a-url.com")!
+        let url = createURL()
         let error = NSError(domain: #function, code: 1_000_000)
         URLProtocolStub.stub(data: nil, response: nil, error: error)
 
@@ -78,6 +78,10 @@ final class URLSessionAPIClientTests: XCTestCase {
     
     func makeSUT(file: StaticString = #file, line: UInt = #line) -> URLSessionHttpClient {
         createAndTrackMemoryLeaks(URLSessionHttpClient(), file: file, line: line)
+    }
+    
+    func createURL() -> URL {
+        URL(string: "https://a-url.com")!
     }
 
     private class URLProtocolStub: URLProtocol {
