@@ -7,4 +7,9 @@ extension XCTestCase {
             XCTAssertNil(instance, file: file, line: line)
         }
     }
+    func createAndTrackMemoryLeaks<T: AnyObject>(_ initializer: @autoclosure () -> T, file: StaticString = #file, line: UInt = #line) -> T {
+        let instance = initializer()
+        trackMemoryLeaks(instance)
+        return instance
+    }
 }

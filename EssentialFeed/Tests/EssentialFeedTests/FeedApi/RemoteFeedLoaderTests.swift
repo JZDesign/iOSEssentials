@@ -93,9 +93,12 @@ final class RemoteFeedLoaderTests: XCTestCase {
     
     private func makeSUT(
         url: URL = URL(string: "https://a-url.com")!,
-        client: HttpClientSpy = HttpClientSpy()
+        client: HttpClientSpy = HttpClientSpy(),
+        file: StaticString = #file,
+        line: UInt = #line
     ) -> (RemoteFeedLoader, HttpClientSpy) {
-        (RemoteFeedLoader(url: url, client: client), client)
+        let sut = createAndTrackMemoryLeaks(RemoteFeedLoader(url: url, client: client), file: file, line: line)
+        return (sut, client)
     }
     
     private func expect(
@@ -119,7 +122,6 @@ final class RemoteFeedLoaderTests: XCTestCase {
             expectation.fulfill()
         }
         action()
-        trackMemoryLeaks(sut, line: line)
         wait(for: [expectation], timeout: 0.1)
     }
     

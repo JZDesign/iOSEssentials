@@ -25,8 +25,6 @@ class URLSessionHttpClient {
 }
 
 final class URLSessionAPIClientTests: XCTestCase {
-    let sut = URLSessionHttpClient()
-
     override func setUp() {
         URLProtocolStub.startInterceptingRequests()
         super.setUp()
@@ -53,7 +51,7 @@ final class URLSessionAPIClientTests: XCTestCase {
             expectation.fulfill()
         }
 
-        sut.get(from: url) { _ in }
+        makeSUT().get(from: url) { _ in }
         wait(for: [expectation], timeout: 0.1)
     }
     
@@ -62,10 +60,8 @@ final class URLSessionAPIClientTests: XCTestCase {
         let error = NSError(domain: #function, code: 1_000_000)
         URLProtocolStub.stub(data: nil, response: nil, error: error)
 
-        let sut = URLSessionHttpClient()
-
         let expectation = expectation(description: #function)
-        sut.get(from: url) { result in
+        makeSUT().get(from: url) { result in
             switch result {
             case let .failure(receivedError as NSError):
                 XCTAssertEqual(receivedError.domain, error.domain)
@@ -79,6 +75,10 @@ final class URLSessionAPIClientTests: XCTestCase {
     }
     
     // MARK: - Helpers
+    
+    func makeSUT(file: StaticString = #file, line: UInt = #line) -> URLSessionHttpClient {
+        createAndTrackMemoryLeaks(URLSessionHttpClient(), file: file, line: line)
+    }
 
     private class URLProtocolStub: URLProtocol {
         private static var stub: Stub? = nil
