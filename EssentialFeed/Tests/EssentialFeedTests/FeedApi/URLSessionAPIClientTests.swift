@@ -8,10 +8,18 @@
 import XCTest
 import EssentialFeed
 
+protocol HttpSession {
+    func dataTask(with url: URL, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> HttpSessionTask
+}
+
+protocol HttpSessionTask {
+    func resume()
+}
+
 class URLSessionHttpClient {
-    private let session: URLSession
+    private let session: HttpSession
     
-    init(session: URLSession) {
+    init(session: HttpSession) {
         self.session = session
     }
     
@@ -55,10 +63,10 @@ final class URLSessionAPIClientTests: XCTestCase {
     
     // MARK: - Helpers
 
-    private class URLSessionSpy: URLSession {
+    private class URLSessionSpy: HttpSession {
         private var stubs = [URL: Stub]()
 
-        override func dataTask(with url: URL, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionDataTask {
+        func dataTask(with url: URL, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> HttpSessionTask {
             guard let stub = stubs[url] else {
                 fatalError("Couldn't find stub for \(url)")
             }
@@ -66,24 +74,24 @@ final class URLSessionAPIClientTests: XCTestCase {
             return stub.task
         }
 
-        func stub(url: URL, task: URLSessionDataTask = FakeURLSessionDataTask(), error: Error? = nil) {
+        func stub(url: URL, task: HttpSessionTask = FakeURLSessionDataTask(), error: Error? = nil) {
             stubs[url] = Stub(task: task, error: error)
         }
         
         private struct Stub {
-            let task: URLSessionDataTask
+            let task: HttpSessionTask
             let error: Error?
         }
     }
 
-    private class FakeURLSessionDataTask: URLSessionDataTask {
-        override func resume() {}
+    private class FakeURLSessionDataTask: HttpSessionTask {
+        func resume() {}
     }
 
-    private class URLSessionDataTaskSpy: URLSessionDataTask {
+    private class URLSessionDataTaskSpy: HttpSessionTask {
         var resumeCallCount = 0
         
-        override func resume() {
+        func resume() {
             resumeCallCount += 1
         }
     }
