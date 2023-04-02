@@ -37,7 +37,6 @@ final class URLSessionAPIClientTests: XCTestCase {
         sut.get(from: url) { result in
             switch result {
             case let .failure(receivedError as NSError):
-                // Could not do a simple comparrison because the userInfo is set on the received error
                 XCTAssertEqual(receivedError.domain, error.domain)
                 XCTAssertEqual(receivedError.code, error.code)
             default:
