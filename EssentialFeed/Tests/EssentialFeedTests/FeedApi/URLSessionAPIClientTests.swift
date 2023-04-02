@@ -78,6 +78,12 @@ final class URLSessionAPIClientTests: XCTestCase {
 
         override func startLoading() {
             guard let url = request.url, let stub = URLProtocolStub.stubs[url] else { return }
+            if let data = stub.data {
+                client?.urlProtocol(self, didLoad: data)
+            }
+            if let response = stub.response {
+                client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+            }
             if let error = stub.error {
                 client?.urlProtocol(self, didFailWithError: error)
             }
