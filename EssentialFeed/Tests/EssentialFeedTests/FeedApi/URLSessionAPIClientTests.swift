@@ -16,9 +16,11 @@ class URLSessionHttpClient {
     }
     
     func get(from url: URL, completion: @escaping (HttpClientResult) -> Void) {
-        session.dataTask(with: url, completionHandler: { _, _, error in
+        session.dataTask(with: url, completionHandler: { data, response, error in
             if let error {
                 completion(.failure(error))
+            } else if let data, data.count > 0, let response = response as? HTTPURLResponse {
+                completion(.success((data, response)))
             } else {
                 completion(.failure(UnexpectedValuesRepresentation()))
             }
@@ -29,6 +31,7 @@ class URLSessionHttpClient {
 }
 
 final class URLSessionAPIClientTests: XCTestCase {
+    // MARK: - Setup/Teardown
     override func setUp() {
         URLProtocolStub.startInterceptingRequests()
         super.setUp()
@@ -38,6 +41,8 @@ final class URLSessionAPIClientTests: XCTestCase {
         URLProtocolStub.stopInterceptingRequests()
         super.tearDown()
     }
+    
+    // MARK: - Success Tests
     
     func test_getFromURL_performGETRequestWithURL() {
         let url = anyURL()
@@ -58,6 +63,27 @@ final class URLSessionAPIClientTests: XCTestCase {
         makeSUT().get(from: url) { _ in }
         wait(for: [expectation], timeout: 0.1)
     }
+    
+    func test_getFromURL_succeedsOnHttpURLResponseWithData() {
+        let data = anyData()
+        let response = anyHTTPURLResponse()
+        URLProtocolStub.stub(data: data, response: response, error: nil)
+        let expectation = expectation(description: #function)
+        makeSUT().get(from: anyURL()) { result in
+            switch result {
+            case let .success((receivedData, receivedResponse)):
+                XCTAssertEqual(data, receivedData)
+                XCTAssertEqual(response.url, receivedResponse.url)
+                XCTAssertEqual(response.statusCode, receivedResponse.statusCode)
+            default:
+                XCTFail("Expected success, got \(result) instead")
+            }
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 0.1)
+    }
+    
+    // MARK: - Failure Tests
     
     func test_getFromURL_failsOnAllInvalidRepresentationCases() {
         XCTAssertNotNil(resultErrorFor(data: nil, response: nil, error: nil))
