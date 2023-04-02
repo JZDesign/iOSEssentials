@@ -37,7 +37,6 @@ final class URLSessionAPIClientTests: XCTestCase {
     }
     
     func test_getFromURL_failsOnRequestError() {
-        let task = URLSessionDataTaskSpy()
         let error = NSError(domain: #function, code: #line)
         session.stub(url: url, error: error)
         let expectation = expectation(description: #function)
