@@ -40,7 +40,18 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES">
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      codeCoverageEnabled = "YES"
+      onlyGenerateCoverageForSpecifiedTargets = "YES">
+      <CodeCoverageTargets>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "EssentialFeed"
+            BuildableName = "EssentialFeed"
+            BlueprintName = "EssentialFeed"
+            ReferencedContainer = "container:">
+         </BuildableReference>
+      </CodeCoverageTargets>
       <Testables>
          <TestableReference
             skipped = "NO"
@@ -51,6 +62,16 @@
                BlueprintIdentifier = "EssentialFeedTests"
                BuildableName = "EssentialFeedTests"
                BlueprintName = "EssentialFeedTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "EssentialFeedAPIEndToEndTests"
+               BuildableName = "EssentialFeedAPIEndToEndTests"
+               BlueprintName = "EssentialFeedAPIEndToEndTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
