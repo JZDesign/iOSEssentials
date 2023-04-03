@@ -1,0 +1,4 @@
+os: OSX
+osx_image: xcode14.3
+language: swift
+script: xcodebuild clean build test -project ./iOSLeadEssentials.xcodeproj -scheme "CI" CODE_SIGNING_REQUIRED=NO
