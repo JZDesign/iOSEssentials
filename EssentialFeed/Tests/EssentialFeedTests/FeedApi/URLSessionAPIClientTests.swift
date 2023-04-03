@@ -7,6 +7,7 @@
 
 import XCTest
 import EssentialFeed
+import EssentialFeedAPITestUtilities
 
 final class URLSessionAPIClientTests: XCTestCase {
     // MARK: - Setup/Teardown

@@ -9,6 +9,9 @@ let package = Package(
         .library(
             name: "EssentialFeed",
             targets: ["EssentialFeed"]),
+        .library(
+            name: "EssentialFeedAPITestUtilities",
+            targets: ["EssentialFeedAPITestUtilities"]),
     ],
     dependencies: [
     ],
@@ -16,11 +19,14 @@ let package = Package(
         .target(
             name: "EssentialFeed",
             dependencies: []),
+        .target(
+            name: "EssentialFeedAPITestUtilities",
+            dependencies: []),
         .testTarget(
             name: "EssentialFeedTests",
-            dependencies: ["EssentialFeed"]),
+            dependencies: ["EssentialFeed", "EssentialFeedAPITestUtilities"]),
         .testTarget(
             name: "EssentialFeedAPIEndToEndTests",
-            dependencies: ["EssentialFeed"]),
+            dependencies: ["EssentialFeed", "EssentialFeedAPITestUtilities"]),
     ]
 )
