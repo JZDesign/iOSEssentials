@@ -33,6 +33,15 @@ final class CacheFeedUseCaseTests: XCTestCase {
         XCTAssertEqual(store.insertCallCount, 0)
     }
     
+    func test_save_requestsViewCacheInsertionOnSuccessfulDeletion() {
+        let (sut, store) = makeSUT()
+        let items = [uniqueItem(), uniqueItem()]
+
+        sut.save(items)
+        sut.store.completeDeletionSuccessfully()
+        XCTAssertEqual(store.insertCallCount, 1)
+    }
+    
     // MARK: - Helpers
     
     func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: LocalFeedLoader, store: FeedStore) {
@@ -56,6 +65,10 @@ class FeedStore {
     
     func completeDeltion(with error: Error, at index: Int = 0) {
         
+    }
+    
+    func completeDeletionSuccessfully() {
+        insertCallCount += 1
     }
 }
 
