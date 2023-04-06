@@ -20,16 +20,25 @@ final class CacheFeedUseCaseTests: XCTestCase {
         let (sut, store) = makeSUT()
         let items = [uniqueItem(), uniqueItem()]
     
-        sut.save(items)
+        sut.save(items) { _ in }
+
         XCTAssertEqual(store.receivedMessages, [.deleteCachedFeed])
     }
     
-    func test_save_doesNotRequestCacheInsertionOnDeletionError() {
+    func test_save_failsOnDeletionError() {
         let (sut, store) = makeSUT()
         let items = [uniqueItem(), uniqueItem()]
         let deletionError = anyNSError()
-        sut.save(items)
+        
+        let exp = expectation(description: #function)
+        var receievedError: Error?
+        sut.save(items) {
+            receievedError = $0
+            exp.fulfill()
+        }
         sut.store.completeDeletion(with: deletionError)
+        wait(for: [exp], timeout: 0.1)
+        XCTAssertEqual(receievedError as? NSError, deletionError)
         XCTAssertEqual(store.receivedMessages, [.deleteCachedFeed])
     }
 
@@ -39,7 +48,8 @@ final class CacheFeedUseCaseTests: XCTestCase {
         let (sut, store) = makeSUT(currentDate: { timestamp })
         let items = [uniqueItem(), uniqueItem()]
 
-        sut.save(items)
+        sut.save(items) { _ in }
+
         sut.store.completeDeletionSuccessfully()
         XCTAssertEqual(store.receivedMessages, [.deleteCachedFeed, .insert(items, timestamp)])
     }
@@ -60,7 +70,7 @@ final class CacheFeedUseCaseTests: XCTestCase {
 class FeedStore {
     typealias DeletionCompletion = (Error?) -> Void
     
-    private(set) var receivedMessages = [ReceivedMessage]()    
+    private(set) var receivedMessages = [ReceivedMessage]()
     private var deletionCompletions = [DeletionCompletion]()
     
     func deleteCachedFeed(completion: @escaping DeletionCompletion) {
@@ -96,11 +106,12 @@ class LocalFeedLoader {
         self.currentDate = currentDate
     }
     
-    func save(_ items: [FeedItem]) {
+    func save(_ items: [FeedItem], completion: @escaping (Error?) -> Void) {
         store.deleteCachedFeed { [unowned self] error in
             if error == nil {
                 self.store.insert(items, timeStamp: currentDate())
             }
+            completion(error)
         }
     }
 }
