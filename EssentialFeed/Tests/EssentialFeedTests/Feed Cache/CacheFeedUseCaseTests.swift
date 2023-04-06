@@ -10,18 +10,26 @@ import EssentialFeed
 import EssentialFeedAPITestUtilities
 
 final class CacheFeedUseCaseTests: XCTestCase {
-    let store = FeedStore()
-    lazy var sut = LocalFeedLoader(store: store)
 
     func test_init_doesNotDeleteCacheUponCreation() throws {
+        let (_, store) = makeSUT()
         XCTAssertEqual(store.deleteCachedFeedCallCount, 0)
     }
     
     func test_save_requestsCacheDeletion() {
+        let (sut, store) = makeSUT()
         let items = [uniqueItem(), uniqueItem()]
     
         sut.save(items)
         XCTAssertEqual(store.deleteCachedFeedCallCount, 1)
+    }
+    
+    // MARK: - Helpers
+    
+    func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: LocalFeedLoader, store: FeedStore) {
+        let store = createAndTrackMemoryLeaks(FeedStore(), file: file, line: line)
+        let sut = createAndTrackMemoryLeaks(LocalFeedLoader(store: store), file: file, line: line)
+        return (sut, store)
     }
     
     func uniqueItem() -> FeedItem {
