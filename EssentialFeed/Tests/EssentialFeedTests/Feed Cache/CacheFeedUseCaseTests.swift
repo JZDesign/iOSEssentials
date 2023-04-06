@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import EssentialFeed
 import EssentialFeedAPITestUtilities
 
 final class CacheFeedUseCaseTests: XCTestCase {
