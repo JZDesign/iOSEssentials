@@ -42,11 +42,23 @@ final class CacheFeedUseCaseTests: XCTestCase {
         XCTAssertEqual(store.insertCallCount, 1)
     }
     
+    func test_save_requestsViewCacheInsertionWithTimestampOnSuccessfulDeletion() {
+        let timestamp = Date()
+        let (sut, store) = makeSUT(currentDate: { timestamp })
+        let items = [uniqueItem(), uniqueItem()]
+
+        sut.save(items)
+        sut.store.completeDeletionSuccessfully()
+        XCTAssertEqual(store.insertions.count, 1)
+        XCTAssertEqual(store.insertions.first?.items, items)
+        XCTAssertEqual(store.insertions.first?.timeStamp, timestamp)
+    }
+    
     // MARK: - Helpers
     
-    func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: LocalFeedLoader, store: FeedStore) {
+    func makeSUT(currentDate: @escaping () -> Date = Date.init, file: StaticString = #file, line: UInt = #line) -> (sut: LocalFeedLoader, store: FeedStore) {
         let store = createAndTrackMemoryLeaks(FeedStore(), file: file, line: line)
-        let sut = createAndTrackMemoryLeaks(LocalFeedLoader(store: store), file: file, line: line)
+        let sut = createAndTrackMemoryLeaks(LocalFeedLoader(store: store, currentDate: currentDate), file: file, line: line)
         return (sut, store)
     }
     
@@ -60,7 +72,10 @@ class FeedStore {
     
     var deleteCachedFeedCallCount = 0
     var insertCallCount = 0
-    var error: Error?
+    
+    var insertions: [(items: [FeedItem], timeStamp: Date)] = []
+    
+    
     private var deletionCompletions = [DeletionCompletion]()
     func deleteCachedFeed(completion: @escaping DeletionCompletion) {
         deleteCachedFeedCallCount += 1
@@ -75,22 +90,25 @@ class FeedStore {
         deletionCompletions[index](nil)
     }
 
-    func insert(_ items: [FeedItem]) {
+    func insert(_ items: [FeedItem], timeStamp: Date) {
         insertCallCount += 1
+        insertions.append((items, timeStamp))
     }
 }
 
 class LocalFeedLoader {
     let store: FeedStore
+    let currentDate: () -> Date
 
-    init(store: FeedStore) {
+    init(store: FeedStore, currentDate: @escaping () -> Date) {
         self.store = store
+        self.currentDate = currentDate
     }
     
     func save(_ items: [FeedItem]) {
         store.deleteCachedFeed { [unowned self] error in
             if error == nil {
-                self.store.insert(items)
+                self.store.insert(items, timeStamp: currentDate())
             }
         }
     }
