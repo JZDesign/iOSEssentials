@@ -59,14 +59,14 @@ final class CacheFeedUseCaseTests: XCTestCase {
 
         sut.save(items) { _ in }
 
-        sut.store.completeDeletionSuccessfully()
+        store.completeDeletionSuccessfully()
         XCTAssertEqual(store.receivedMessages, [.deleteCachedFeed, .insert(items, timestamp)])
     }
     
     // MARK: - Helpers
     
-    func makeSUT(currentDate: @escaping () -> Date = Date.init, file: StaticString = #file, line: UInt = #line) -> (sut: LocalFeedLoader, store: FeedStore) {
-        let store = createAndTrackMemoryLeaks(FeedStore(), file: file, line: line)
+    func makeSUT(currentDate: @escaping () -> Date = Date.init, file: StaticString = #file, line: UInt = #line) -> (sut: LocalFeedLoader, store: FeedStoreSpy) {
+        let store = createAndTrackMemoryLeaks(FeedStoreSpy(), file: file, line: line)
         let sut = createAndTrackMemoryLeaks(LocalFeedLoader(store: store, currentDate: currentDate), file: file, line: line)
         return (sut, store)
     }
@@ -90,8 +90,7 @@ final class CacheFeedUseCaseTests: XCTestCase {
     }
 }
 
-class FeedStore {
-    typealias FeedStoreCompletion = (Error?) -> Void
+class FeedStoreSpy: FeedStore {
     
     private(set) var receivedMessages = [ReceivedMessage]()
     private var deletionCompletions = [FeedStoreCompletion]()
@@ -129,6 +128,12 @@ class FeedStore {
     }
 }
 
+protocol FeedStore {
+    typealias FeedStoreCompletion = (Error?) -> Void
+
+    func deleteCachedFeed(completion: @escaping FeedStoreCompletion)
+    func insert(_ items: [FeedItem], timeStamp: Date, completion: @escaping FeedStoreCompletion)
+}
 
 class LocalFeedLoader {
     let store: FeedStore
