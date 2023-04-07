@@ -18,9 +18,8 @@ final class CacheFeedUseCaseTests: XCTestCase {
     
     func test_save_requestsCacheDeletion() {
         let (sut, store) = makeSUT()
-        let items = [uniqueItem(), uniqueItem()]
     
-        sut.save(items) { _ in }
+        sut.save(uniqueItems().models) { _ in }
 
         XCTAssertEqual(store.receivedMessages, [.deleteCachedFeed])
     }
@@ -55,12 +54,12 @@ final class CacheFeedUseCaseTests: XCTestCase {
     func test_save_requestsViewCacheInsertionWithTimestampOnSuccessfulDeletion() {
         let timestamp = Date()
         let (sut, store) = makeSUT(currentDate: { timestamp })
-        let items = [uniqueItem(), uniqueItem()]
+        let (items, local) = uniqueItems()
 
         sut.save(items) { _ in }
 
         store.completeDeletionSuccessfully()
-        XCTAssertEqual(store.receivedMessages, [.deleteCachedFeed, .insert(items.map(LocalFeedItem.from), timestamp)])
+        XCTAssertEqual(store.receivedMessages, [.deleteCachedFeed, .insert(local, timestamp)])
     }
     
     func test_save_doesNotDeliverInsertionErrorAfterSUTInstanceHasBeenDeallocated() {
@@ -69,7 +68,7 @@ final class CacheFeedUseCaseTests: XCTestCase {
 
         var receivedResults = [Error?]()
 
-        sut?.save([uniqueItem()], completion: { error in
+        sut?.save(uniqueItems().models, completion: { error in
             receivedResults.append(error)
         })
         store.completeDeletionSuccessfully()
@@ -90,10 +89,17 @@ final class CacheFeedUseCaseTests: XCTestCase {
         FeedItem(id: UUID(), description: "any", location: "any", imageURL: anyURL())
     }
     
+    
+    func uniqueItems() -> (models: [FeedItem], local: [LocalFeedItem]) {
+        let item1 = uniqueItem()
+        let item2 = uniqueItem()
+        return ([item1, item2], [LocalFeedItem.from(item1), LocalFeedItem.from(item2)])
+    }
+    
     func expect(_ sut: LocalFeedLoader, toCompleteWithError expectedError: NSError?, when action: () -> Void, file: StaticString = #file, line: UInt = #line, function: StaticString = #function) {
         let expectation = expectation(description: function.description)
         var receivedError: Error?
-        sut.save([uniqueItem()]) { error in
+        sut.save(uniqueItems().models) { error in
             receivedError = error
             expectation.fulfill()
         }
