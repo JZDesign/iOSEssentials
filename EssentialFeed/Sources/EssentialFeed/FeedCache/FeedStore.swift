@@ -1,8 +1,9 @@
 import Foundation
 
 public protocol FeedStore {
-    typealias FeedStoreCompletion = (Error?) -> Void
+    typealias DeletionCompletion = (Error?) -> Void
+    typealias InsertionCompletion = (Error?) -> Void
 
-    func deleteCachedFeed(completion: @escaping FeedStoreCompletion)
-    func insert(_ items: [FeedItem], timeStamp: Date, completion: @escaping FeedStoreCompletion)
+    func deleteCachedFeed(completion: @escaping DeletionCompletion)
+    func insert(_ items: [FeedItem], timeStamp: Date, completion: @escaping InsertionCompletion)
 }

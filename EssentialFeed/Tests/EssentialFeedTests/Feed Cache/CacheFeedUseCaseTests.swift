@@ -108,10 +108,10 @@ final class CacheFeedUseCaseTests: XCTestCase {
 class FeedStoreSpy: FeedStore {
     
     private(set) var receivedMessages = [ReceivedMessage]()
-    private var deletionCompletions = [FeedStoreCompletion]()
-    private var insertionCompletions = [FeedStoreCompletion]()
+    private var deletionCompletions = [DeletionCompletion]()
+    private var insertionCompletions = [InsertionCompletion]()
     
-    func deleteCachedFeed(completion: @escaping FeedStoreCompletion) {
+    func deleteCachedFeed(completion: @escaping DeletionCompletion) {
         receivedMessages.append(.deleteCachedFeed)
         deletionCompletions.append(completion)
     }
@@ -132,7 +132,7 @@ class FeedStoreSpy: FeedStore {
         deletionCompletions[index](nil)
     }
 
-    func insert(_ items: [FeedItem], timeStamp: Date, completion: @escaping FeedStoreCompletion) {
+    func insert(_ items: [FeedItem], timeStamp: Date, completion: @escaping InsertionCompletion) {
         receivedMessages.append(.insert(items, timeStamp))
         insertionCompletions.append(completion)
     }
