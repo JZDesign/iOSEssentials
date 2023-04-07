@@ -65,12 +65,12 @@ final class LoadFeedFromRemoteUseCaseTests: XCTestCase {
     func test_load_deliversItemsOn200HttpResponseWithValidItems() {
         let (sut, client) = makeSUT(url: URL(string: "https://another-url.com")!)
         
-        let item1 = makeItem(imageURL: URL(string: "https://a-url.com")!)
+        let item1 = makeItem(url: URL(string: "https://a-url.com")!)
         
         let item2 = makeItem(
             description: "a description",
             location: "a location",
-            imageURL: URL(string: "https://another-url.com")!
+            url: URL(string: "https://another-url.com")!
         )
         
         expect(sut, toCompleteWith: .success([item1.model, item2.model])) {
@@ -130,20 +130,20 @@ final class LoadFeedFromRemoteUseCaseTests: XCTestCase {
         id: UUID = UUID(),
         description: String? = nil,
         location: String? = nil,
-        imageURL: URL
-    ) -> (model: FeedItem, json: [String: Any]) {
+        url: URL
+    ) -> (model: FeedImage, json: [String: Any]) {
         (
-            FeedItem(
+            FeedImage(
                 id: id,
                 description: description,
                 location: location,
-                imageURL: imageURL
+                url: url
             ),
             [
                 "id" : id.uuidString,
                 "description" : description,
                 "location" : location,
-                "image" : imageURL.absoluteString
+                "image" : url.absoluteString
             ].compactMapValues { $0 }
         )
     }

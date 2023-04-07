@@ -15,14 +15,14 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
         switch getFeedResult() {
         case let .success(items):
             XCTAssertEqual(items.count, 8)
-            XCTAssertEqual(items[0], expectedItems(at: 0))
-            XCTAssertEqual(items[1], expectedItems(at: 1))
-            XCTAssertEqual(items[2], expectedItems(at: 2))
-            XCTAssertEqual(items[3], expectedItems(at: 3))
-            XCTAssertEqual(items[4], expectedItems(at: 4))
-            XCTAssertEqual(items[5], expectedItems(at: 5))
-            XCTAssertEqual(items[6], expectedItems(at: 6))
-            XCTAssertEqual(items[7], expectedItems(at: 7))
+            XCTAssertEqual(items[0], expectedImages(at: 0))
+            XCTAssertEqual(items[1], expectedImages(at: 1))
+            XCTAssertEqual(items[2], expectedImages(at: 2))
+            XCTAssertEqual(items[3], expectedImages(at: 3))
+            XCTAssertEqual(items[4], expectedImages(at: 4))
+            XCTAssertEqual(items[5], expectedImages(at: 5))
+            XCTAssertEqual(items[6], expectedImages(at: 6))
+            XCTAssertEqual(items[7], expectedImages(at: 7))
         case let .failure(error):
             XCTFail("Expected success but received \(error) instead")
         default:
@@ -32,12 +32,12 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func expectedItems(at index: Int) -> FeedItem {
-        FeedItem(
+    private func expectedImages(at index: Int) -> FeedImage {
+        FeedImage(
             id: id(at: index),
             description: description(at: index),
             location: location(at: index),
-            imageURL: imageURL(at: index)
+            url: url(at: index)
         )
     }
     
@@ -80,7 +80,7 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
         ][index]
     }
 
-    private func imageURL(at index: Int) -> URL {
+    private func url(at index: Int) -> URL {
         return URL(string: "https://url-\(index+1).com")!
     }
     

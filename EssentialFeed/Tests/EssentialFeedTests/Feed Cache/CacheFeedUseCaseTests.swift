@@ -19,7 +19,7 @@ final class CacheFeedUseCaseTests: XCTestCase {
     func test_save_requestsCacheDeletion() {
         let (sut, store) = makeSUT()
     
-        sut.save(uniqueItems().models) { _ in }
+        sut.save(uniqueImageFeed().models) { _ in }
 
         XCTAssertEqual(store.receivedMessages, [.deleteCachedFeed])
     }
@@ -54,7 +54,7 @@ final class CacheFeedUseCaseTests: XCTestCase {
     func test_save_requestsViewCacheInsertionWithTimestampOnSuccessfulDeletion() {
         let timestamp = Date()
         let (sut, store) = makeSUT(currentDate: { timestamp })
-        let (items, local) = uniqueItems()
+        let (items, local) = uniqueImageFeed()
 
         sut.save(items) { _ in }
 
@@ -68,7 +68,7 @@ final class CacheFeedUseCaseTests: XCTestCase {
 
         var receivedResults = [Error?]()
 
-        sut?.save(uniqueItems().models, completion: { error in
+        sut?.save(uniqueImageFeed().models, completion: { error in
             receivedResults.append(error)
         })
         store.completeDeletionSuccessfully()
@@ -85,21 +85,21 @@ final class CacheFeedUseCaseTests: XCTestCase {
         return (sut, store)
     }
     
-    func uniqueItem() -> FeedItem {
-        FeedItem(id: UUID(), description: "any", location: "any", imageURL: anyURL())
+    func uniqueImage() -> FeedImage {
+        FeedImage(id: UUID(), description: "any", location: "any", url: anyURL())
     }
     
     
-    func uniqueItems() -> (models: [FeedItem], local: [LocalFeedItem]) {
-        let item1 = uniqueItem()
-        let item2 = uniqueItem()
-        return ([item1, item2], [LocalFeedItem.from(item1), LocalFeedItem.from(item2)])
+    func uniqueImageFeed() -> (models: [FeedImage], local: [LocalFeedImage]) {
+        let item1 = uniqueImage()
+        let item2 = uniqueImage()
+        return ([item1, item2], [LocalFeedImage.from(item1), LocalFeedImage.from(item2)])
     }
     
     func expect(_ sut: LocalFeedLoader, toCompleteWithError expectedError: NSError?, when action: () -> Void, file: StaticString = #file, line: UInt = #line, function: StaticString = #function) {
         let expectation = expectation(description: function.description)
         var receivedError: Error?
-        sut.save(uniqueItems().models) { error in
+        sut.save(uniqueImageFeed().models) { error in
             receivedError = error
             expectation.fulfill()
         }
@@ -138,13 +138,13 @@ class FeedStoreSpy: FeedStore {
         deletionCompletions[index](nil)
     }
 
-    func insert(_ items: [LocalFeedItem], timeStamp: Date, completion: @escaping InsertionCompletion) {
+    func insert(_ items: [LocalFeedImage], timeStamp: Date, completion: @escaping InsertionCompletion) {
         receivedMessages.append(.insert(items, timeStamp))
         insertionCompletions.append(completion)
     }
 
     enum ReceivedMessage: Equatable {
         case deleteCachedFeed
-        case insert([LocalFeedItem], Date)
+        case insert([LocalFeedImage], Date)
     }
 }

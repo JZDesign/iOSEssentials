@@ -74,7 +74,7 @@ struct FeedItemRoot: Decodable {
 }
 
 fileprivate extension RemoteFeedItem {
-    var feedItem: FeedItem {
-        .init(id: id, description: description, location: location, imageURL: image)
+    var feedItem: FeedImage {
+        .init(id: id, description: description, location: location, url: image)
     }
 }
