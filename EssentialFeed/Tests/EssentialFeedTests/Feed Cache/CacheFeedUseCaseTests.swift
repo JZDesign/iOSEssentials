@@ -63,7 +63,7 @@ final class CacheFeedUseCaseTests: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [.deleteCachedFeed, .insert(items, timestamp)])
     }
     
-    func test_save_doesNotDeliverDeletionErrorAfterSUTInstanceHasBeenDeallocated() {
+    func test_save_doesNotDeliverInsertionErrorAfterSUTInstanceHasBeenDeallocated() {
         let store = FeedStoreSpy()
         var sut: LocalFeedLoader? = LocalFeedLoader(store: store, currentDate: Date.init)
 
@@ -72,8 +72,9 @@ final class CacheFeedUseCaseTests: XCTestCase {
         sut?.save([uniqueItem()], completion: { error in
             receivedResults.append(error)
         })
+        store.completeDeletionSuccessfully()
         sut = nil
-        store.completeDeletion(with: anyNSError())
+        store.completeInsertion(with: anyNSError())
         XCTAssertTrue(receivedResults.isEmpty)
     }
     
@@ -162,6 +163,9 @@ class LocalFeedLoader {
         store.deleteCachedFeed { [weak self] error in
             guard let self else { return }
             if error == nil {
+                // In lesson **Proper Memory-Management of Captured References Within Deeply Nested Closures + Identifying Highly-Coupled Modules**
+                // They didn't just pass a reference of the completion block through, they did another weak self closure then invoked the completion from within the other closure
+                // I ran the tests 100k + times and I also tried using a dispatch queue and could not replicate the issue.
                 self.store.insert(items, timeStamp: self.currentDate(), completion: completion)
             } else {
                 completion(error)
