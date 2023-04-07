@@ -13,10 +13,10 @@ public final class LocalFeedLoader {
         store.deleteCachedFeed { [weak self] error in
             guard let self else { return }
             if error == nil {
-                // In lesson **Proper Memory-Management of Captured References Within Deeply Nested Closures + Identifying Highly-Coupled Modules**
-                // They didn't just pass a reference of the completion block through, they did another weak self closure then invoked the completion from within the other closure
-                // I ran the tests 100k + times and I also tried using a dispatch queue and could not replicate the issue.
-                self.store.insert(items, timeStamp: self.currentDate(), completion: completion)
+                self.store.insert(items, timeStamp: self.currentDate()) { [weak self] in
+                    guard self != nil else { return }
+                    completion($0)
+                }
             } else {
                 completion(error)
             }
