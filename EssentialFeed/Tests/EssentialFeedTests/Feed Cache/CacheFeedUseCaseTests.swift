@@ -60,7 +60,7 @@ final class CacheFeedUseCaseTests: XCTestCase {
         sut.save(items) { _ in }
 
         store.completeDeletionSuccessfully()
-        XCTAssertEqual(store.receivedMessages, [.deleteCachedFeed, .insert(items, timestamp)])
+        XCTAssertEqual(store.receivedMessages, [.deleteCachedFeed, .insert(items.map(LocalFeedItem.from), timestamp)])
     }
     
     func test_save_doesNotDeliverInsertionErrorAfterSUTInstanceHasBeenDeallocated() {
@@ -132,13 +132,13 @@ class FeedStoreSpy: FeedStore {
         deletionCompletions[index](nil)
     }
 
-    func insert(_ items: [FeedItem], timeStamp: Date, completion: @escaping InsertionCompletion) {
+    func insert(_ items: [LocalFeedItem], timeStamp: Date, completion: @escaping InsertionCompletion) {
         receivedMessages.append(.insert(items, timeStamp))
         insertionCompletions.append(completion)
     }
 
     enum ReceivedMessage: Equatable {
         case deleteCachedFeed
-        case insert([FeedItem], Date)
+        case insert([LocalFeedItem], Date)
     }
 }
