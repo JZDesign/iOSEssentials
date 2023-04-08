@@ -4,12 +4,14 @@ public final class LocalFeedLoader: FeedLoader {
     let store: FeedStore
     let currentDate: () -> Date
     
+    public typealias LoadResult = LoadFeedResult
+    
     public init(store: FeedStore, currentDate: @escaping () -> Date) {
         self.store = store
         self.currentDate = currentDate
     }
     
-    public func load(completion: @escaping (LoadFeedResult) -> Void) {
+    public func load(completion: @escaping (LoadResult) -> Void) {
         store.retrieve { [weak self] result in
             guard self != nil else { return }
             switch result {
@@ -27,7 +29,9 @@ public final class LocalFeedLoader: FeedLoader {
 // MARK: - Save
 
 public extension LocalFeedLoader {
-    func save(_ items: [FeedImage], completion: @escaping (Error?) -> Void) {
+    typealias SaveResult = Error?
+
+    func save(_ items: [FeedImage], completion: @escaping (SaveResult) -> Void) {
         store.deleteCachedFeed { [weak self] error in
             guard let self else { return }
             if error == nil {
