@@ -11,16 +11,13 @@ public final class LocalFeedLoader: FeedLoader {
     
     public func load(completion: @escaping (LoadFeedResult) -> Void) {
         store.retrieve { [weak self] result in
-            guard let self else { return }
+            guard self != nil else { return }
             switch result {
             case let .failure(error):
                 completion(.failure(error))
             case let .found(feed: images, timeStamp: date) where Self.validate(date):
                     completion(.success(images.toFeedImage()))
-            case .found:
-                self.store.deleteCachedFeed { _ in }
-                completion(.success([]))
-            case .empty:
+            case .found, .empty:
                 completion(.success([]))
             }
         }
