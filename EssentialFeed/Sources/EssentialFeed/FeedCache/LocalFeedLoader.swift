@@ -9,6 +9,10 @@ public final class LocalFeedLoader {
         self.currentDate = currentDate
     }
     
+    public func load() {
+        store.retrieve()
+    }
+    
     public func save(_ items: [FeedImage], completion: @escaping (Error?) -> Void) {
         store.deleteCachedFeed { [weak self] error in
             guard let self else { return }
