@@ -47,6 +47,9 @@ public extension XCTestCase {
 }
 
 public extension Date {
+    func minusFeedCacheMaxAge() -> Date {
+        adding(days: -7)
+    }
     func adding(days: Int) -> Date {
         Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
     }
