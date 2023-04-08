@@ -19,8 +19,13 @@ final class LoadFeedFromCacheUseCaseTests: XCTestCase {
         let expectation = expectation(description: #function)
         
         var receivedError: Error?
-        sut.load { error in
-            receivedError = error
+        sut.load { result in
+            switch result {
+            case .success:
+                XCTFail(#function)
+            case .failure(let error):
+                receivedError = error
+            }
             expectation.fulfill()
         }
         
@@ -28,6 +33,27 @@ final class LoadFeedFromCacheUseCaseTests: XCTestCase {
         
         wait(for: [expectation], timeout: 0.1)
         XCTAssertNotNil(receivedError)
+    }
+    
+    func test_load_deliversNoImagesOnEmptyCache() {
+        let (sut, store) = makeSUT()
+        let expectation = expectation(description: #function)
+        
+        var receivedImages: [FeedImage]?
+        sut.load { result in
+            switch result {
+            case .failure:
+                XCTFail(#function)
+            case .success(let images):
+                receivedImages = images
+            }
+            expectation.fulfill()
+        }
+        
+        store.completeRetrievalSuccessfully()
+        
+        wait(for: [expectation], timeout: 0.1)
+        XCTAssertEqual(receivedImages, [])
     }
     
     // MARK: - Helpers
