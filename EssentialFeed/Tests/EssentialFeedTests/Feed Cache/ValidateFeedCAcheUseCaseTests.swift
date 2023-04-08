@@ -24,6 +24,15 @@ final class ValidateFeedCAcheUseCaseTests: XCTestCase {
         store.completeRetrievalAsEmpty()
         XCTAssertEqual(store.receivedMessages, [.retrieveFromCache])
     }
+    
+    func test_validateCache_doesNotDeleteCacheOnLessThanSevenDaysOldCache() {
+        let date = Date()
+        let (sut, store) = makeSUT(currentDate: { date })
+        let feed = uniqueImageFeed()
+        sut.validateCache()
+        store.completeRetrievalSuccessfully(with: feed.local, timeStamp: date.adding(days: -7).adding(seconds: 1))
+        XCTAssertEqual(store.receivedMessages, [.retrieveFromCache])
+    }
 
     // MARK: - Helpers
 
