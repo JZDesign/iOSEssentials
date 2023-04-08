@@ -22,8 +22,12 @@ public final class LocalFeedLoader: FeedLoader {
             }
         }
     }
-    
-    public func save(_ items: [FeedImage], completion: @escaping (Error?) -> Void) {
+}
+
+// MARK: - Save
+
+public extension LocalFeedLoader {
+    func save(_ items: [FeedImage], completion: @escaping (Error?) -> Void) {
         store.deleteCachedFeed { [weak self] error in
             guard let self else { return }
             if error == nil {
@@ -33,8 +37,12 @@ public final class LocalFeedLoader: FeedLoader {
             }
         }
     }
-    
-    public func validateCache() {
+}
+
+// MARK: - Validate Cache
+
+public extension LocalFeedLoader {
+    func validateCache() {
         store.retrieve { [weak self]  result in
             guard let self else { return }
             switch result {
@@ -47,8 +55,12 @@ public final class LocalFeedLoader: FeedLoader {
             }
         }
     }
-    
-    private func cache(_ items: [FeedImage], with completion: @escaping (Error?) -> Void) {
+}
+
+// MARK: - Helpers
+
+private extension LocalFeedLoader {
+    func cache(_ items: [FeedImage], with completion: @escaping (Error?) -> Void) {
         store.insert(items.toLocal(), timeStamp: currentDate()) { [weak self] error in
             guard self != nil else { return }
 
@@ -56,9 +68,9 @@ public final class LocalFeedLoader: FeedLoader {
         }
     }
     
-    private static var MAX_CACHE_AGE_IN_DAYS: Int { 7 }
+    static var MAX_CACHE_AGE_IN_DAYS: Int { 7 }
     
-    private static func validate(_ timeStamp: Date) -> Bool {
+    static func validate(_ timeStamp: Date) -> Bool {
         let calendar = Calendar(identifier: .gregorian)
         guard let cacheExpiration = calendar.date(byAdding: .day, value: -MAX_CACHE_AGE_IN_DAYS, to: Date()) else {
             return false
