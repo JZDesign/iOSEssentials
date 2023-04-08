@@ -14,13 +14,9 @@ public final class LocalFeedLoader: FeedLoader {
             switch result {
             case let .failure(error):
                 completion(.failure(error))
-            case let .found(feed: images, timeStamp: date):
-                if let cacheExpiration = Calendar(identifier: .gregorian).date(byAdding: .day, value: -7, to: Date()), date > cacheExpiration {
+            case let .found(feed: images, timeStamp: date) where Self.validate(date):
                     completion(.success(images.toFeedImage()))
-                } else {
-                    completion(.success([]))
-                }
-            case .empty:
+            case .found, .empty:
                 completion(.success([]))
             }
         }
@@ -43,6 +39,16 @@ public final class LocalFeedLoader: FeedLoader {
 
             completion(error)
         }
+    }
+    
+    private static var MAX_CACHE_AGE_IN_DAYS: Int { 7 }
+    
+    private static func validate(_ timeStamp: Date) -> Bool {
+        let calendar = Calendar(identifier: .gregorian)
+        guard let cacheExpiration = calendar.date(byAdding: .day, value: -MAX_CACHE_AGE_IN_DAYS, to: Date()) else {
+            return false
+        }
+        return timeStamp > cacheExpiration
     }
 }
 
