@@ -2,7 +2,7 @@ import XCTest
 import EssentialFeed
 import EssentialFeedAPITestUtilities
 
-final class ValidateFeedCAcheUseCaseTests: XCTestCase {
+final class ValidateFeedCacheUseCaseTests: XCTestCase {
 
     func test_load_doesNotMessageStoreOnCreation() {
         let (sut, store) = makeSUT()
