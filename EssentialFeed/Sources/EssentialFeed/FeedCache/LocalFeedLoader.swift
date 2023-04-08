@@ -18,7 +18,10 @@ public final class LocalFeedLoader: FeedLoader {
                 completion(.failure(error))
             case let .found(feed: images, timeStamp: date) where Self.validate(date):
                     completion(.success(images.toFeedImage()))
-            case .found, .empty:
+            case .found:
+                self.store.deleteCachedFeed { _ in }
+                completion(.success([]))
+            case .empty:
                 completion(.success([]))
             }
         }
