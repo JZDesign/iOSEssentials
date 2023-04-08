@@ -85,16 +85,6 @@ final class CacheFeedUseCaseTests: XCTestCase {
         return (sut, store)
     }
     
-    func uniqueImage() -> FeedImage {
-        FeedImage(id: UUID(), description: "any", location: "any", url: anyURL())
-    }
-    
-    func uniqueImageFeed() -> (models: [FeedImage], local: [LocalFeedImage]) {
-        let item1 = uniqueImage()
-        let item2 = uniqueImage()
-        return ([item1, item2], [LocalFeedImage.from(item1), LocalFeedImage.from(item2)])
-    }
-    
     func expect(_ sut: LocalFeedLoader, toCompleteWithError expectedError: NSError?, when action: () -> Void, file: StaticString = #file, line: UInt = #line, function: StaticString = #function) {
         let expectation = expectation(description: function.description)
         var receivedError: Error?

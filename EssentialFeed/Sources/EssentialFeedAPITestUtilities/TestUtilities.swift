@@ -1,4 +1,5 @@
 import Foundation
+import EssentialFeed
 import XCTest
 
 public extension XCTestCase {
@@ -34,4 +35,23 @@ public extension XCTestCase {
         NSError(domain: #function, code: #line)
     }
     
+    func uniqueImage() -> FeedImage {
+        FeedImage(id: UUID(), description: "any", location: "any", url: anyURL())
+    }
+    
+    func uniqueImageFeed() -> (models: [FeedImage], local: [LocalFeedImage]) {
+        let item1 = uniqueImage()
+        let item2 = uniqueImage()
+        return ([item1, item2], [LocalFeedImage.from(item1), LocalFeedImage.from(item2)])
+    }
+}
+
+public extension Date {
+    func adding(days: Int) -> Date {
+        Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
+    }
+
+    func adding(seconds: TimeInterval) -> Date {
+        self + seconds
+    }
 }
