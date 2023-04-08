@@ -34,7 +34,7 @@ final class ValidateFeedCacheUseCaseTests: XCTestCase {
     }
     
     
-    func test_validateCache_shouldDeleteCacheWhenAtExpirationCache() {
+    func test_validateCache_shouldDeleteCacheOnCacheExpirationCache() {
         let date = Date()
         let (sut, store) = makeSUT(currentDate: { date })
         let feed = uniqueImageFeed()
