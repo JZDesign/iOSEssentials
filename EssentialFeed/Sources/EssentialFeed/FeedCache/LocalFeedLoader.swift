@@ -10,9 +10,11 @@ public final class LocalFeedLoader: FeedLoader {
     }
     
     public func load(completion: @escaping (LoadFeedResult) -> Void) {
-        store.retrieve { result in
+        store.retrieve { [weak self] result in
+            guard let self else { return }
             switch result {
             case let .failure(error):
+                self.store.deleteCachedFeed { _ in }
                 completion(.failure(error))
             case let .found(feed: images, timeStamp: date) where Self.validate(date):
                     completion(.success(images.toFeedImage()))
