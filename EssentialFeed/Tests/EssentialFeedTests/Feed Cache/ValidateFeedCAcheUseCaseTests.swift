@@ -3,21 +3,20 @@ import EssentialFeed
 import EssentialFeedAPITestUtilities
 
 final class ValidateFeedCAcheUseCaseTests: XCTestCase {
-    
-    
+
     func test_load_doesNotMessageStoreOnCreation() {
         let (sut, store) = makeSUT()
         sut.load { _ in }
         XCTAssertEqual(store.receivedMessages, [.retrieveFromCache])
     }
-    
+
     func test_validateCache_deletesCacheOnRetrievalError() {
         let (sut, store) = makeSUT()
         sut.validateCache()
         store.completeRetrieval(with: anyNSError())
         XCTAssertEqual(store.receivedMessages, [.retrieveFromCache, .deleteCachedFeed])
     }
-    
+
     func test_validateCache_doesNotDeleteCacheOnEmptyCache() {
         let (sut, store) = makeSUT()
         sut.validateCache()
@@ -52,7 +51,6 @@ final class ValidateFeedCAcheUseCaseTests: XCTestCase {
         store.completeRetrievalSuccessfully(with: feed.local, timeStamp: date.adding(days: -7).adding(seconds: -1))
         XCTAssertEqual(store.receivedMessages, [.retrieveFromCache, .deleteCachedFeed])
     }
-    
 
     // MARK: - Helpers
 

@@ -40,11 +40,9 @@ public final class LocalFeedLoader: FeedLoader {
             switch result {
             case .failure:
                 self.store.deleteCachedFeed { _ in }
-            case let .found(feed: _, timeStamp: date) where Self.validate(date):
-                break
-            case .found:
+            case let .found(feed: _, timeStamp: date) where !Self.validate(date):
                 self.store.deleteCachedFeed { _ in }
-            case .empty:
+            case .found, .empty:
                 break
             }
         }
