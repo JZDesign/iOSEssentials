@@ -3,13 +3,12 @@ import Foundation
 public final class LocalFeedLoader: FeedLoader {
     let store: FeedStore
     let currentDate: () -> Date
-    let cachePolicy: FeedCachePolicy
+    let cachePolicy = FeedCachePolicy()
     public typealias LoadResult = LoadFeedResult
     
     public init(store: FeedStore, currentDate: @escaping () -> Date) {
         self.store = store
         self.currentDate = currentDate
-        self.cachePolicy = FeedCachePolicy(currentDate: currentDate)
     }
     
     public func load(completion: @escaping (LoadResult) -> Void) {
@@ -20,7 +19,7 @@ public final class LocalFeedLoader: FeedLoader {
             case let .failure(error):
                 completion(.failure(error))
         
-            case let .found(feed: images, timeStamp: date) where self.cachePolicy.validate(date):
+            case let .found(feed: images, timeStamp: date) where self.cachePolicy.validate(date, against: self.currentDate()):
                     completion(.success(images.toFeedImage()))
 
             case .found, .empty:
@@ -59,7 +58,7 @@ public extension LocalFeedLoader {
             case .failure:
                 self.store.deleteCachedFeed { _ in }
 
-            case let .found(feed: _, timeStamp: date) where !self.cachePolicy.validate(date):
+            case let .found(feed: _, timeStamp: date) where !self.cachePolicy.validate(date, against: self.currentDate()):
                 self.store.deleteCachedFeed { _ in }
 
             case .found, .empty:
@@ -84,19 +83,16 @@ private extension LocalFeedLoader {
 final class FeedCachePolicy {
     private let calendar: Calendar
     private let maxCacheAgeInDays: Int
-    private let currentDate: () -> Date
-    
+
     init(
         calendar: Calendar = .init(identifier: .gregorian),
-        maxCacheAgeInDays: Int = 7,
-        currentDate: @escaping () -> Date = Date.init
+        maxCacheAgeInDays: Int = 7
     ) {
         self.calendar = calendar
         self.maxCacheAgeInDays = maxCacheAgeInDays
-        self.currentDate = currentDate
     }
         
-    func validate(_ timeStamp: Date) -> Bool {
+    func validate(_ timeStamp: Date, against date: Date) -> Bool {
         guard let maxCacheAge = calendar.date(
             byAdding: .day,
             value: maxCacheAgeInDays,
@@ -105,7 +101,7 @@ final class FeedCachePolicy {
             return false
         }
 
-        return currentDate() < maxCacheAge
+        return date < maxCacheAge
     }
 }
 
