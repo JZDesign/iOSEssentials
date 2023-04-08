@@ -1,3 +1,20 @@
 # EssentialFeed
 
-A description of this package.
+## Cache Requirements
+- Retrieve
+    - Empty Cache
+    - Non-Empty Cache returns data
+    - Non-Empty Cache twice returns same data (no side effects)
+    - Error returns invalid data when applicable
+
+- Insert
+    - To empty cache stores data
+    - To non-empty cache stores data and overwrites old data
+    - Error (e.g. no write permissions)
+
+- Delete
+    - does nothing to an empty cache and does not fail
+    - empties non-empty cache (wipeout)
+    - Error (if applicable, e.g. no delete permissions)
+    
+- Side-Effects must run **serially** to avoid race conditions (multi-threaded envrionment)
