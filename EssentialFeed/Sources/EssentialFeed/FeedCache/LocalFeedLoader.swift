@@ -10,12 +10,19 @@ public final class LocalFeedLoader: FeedLoader {
     }
     
     public func load(completion: @escaping (LoadFeedResult) -> Void) {
-        store.retrieve { error in
-            if let error {
+        store.retrieve { result in
+            switch result {
+            case let .failure(error):
                 completion(.failure(error))
-                return
+            case let .found(feed: images, timeStamp: date):
+                if let cacheExpiration = Calendar(identifier: .gregorian).date(byAdding: .day, value: -7, to: Date()), date > cacheExpiration {
+                    completion(.success(images.toFeedImage()))
+                } else {
+                    completion(.success([]))
+                }
+            case .empty:
+                completion(.success([]))
             }
-            completion(.success([]))
         }
     }
     
@@ -35,6 +42,14 @@ public final class LocalFeedLoader: FeedLoader {
             guard self != nil else { return }
 
             completion(error)
+        }
+    }
+}
+
+private extension Array where Element == LocalFeedImage {
+    func toFeedImage() -> [FeedImage] {
+        map {
+            FeedImage(id: $0.id, description: $0.description, location: $0.location, url: $0.url)
         }
     }
 }

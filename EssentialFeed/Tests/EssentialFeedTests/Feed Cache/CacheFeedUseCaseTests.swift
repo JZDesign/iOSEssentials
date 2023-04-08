@@ -89,7 +89,6 @@ final class CacheFeedUseCaseTests: XCTestCase {
         FeedImage(id: UUID(), description: "any", location: "any", url: anyURL())
     }
     
-    
     func uniqueImageFeed() -> (models: [FeedImage], local: [LocalFeedImage]) {
         let item1 = uniqueImage()
         let item2 = uniqueImage()
@@ -149,12 +148,17 @@ class FeedStoreSpy: FeedStore {
         retrievalCompletions.append(completion)
     }
     
-    func completeRetrievalSuccessfully(at index: Int = 0) {
-        retrievalCompletions[index](nil)
+    
+    func completeRetrievalAsEmpty(at index: Int = 0) {
+        retrievalCompletions[index](.empty)
+    }
+    
+    func completeRetrievalSuccessfully(with feed: [LocalFeedImage] = [], timeStamp: Date = Date(), at index: Int = 0) {
+        retrievalCompletions[index](.found(feed: feed, timeStamp: timeStamp))
     }
 
     func completeRetrieval(with error: Error, at index: Int = 0) {
-        retrievalCompletions[index](error)
+        retrievalCompletions[index](.failure(error))
     }
 
     enum ReceivedMessage: Equatable {
