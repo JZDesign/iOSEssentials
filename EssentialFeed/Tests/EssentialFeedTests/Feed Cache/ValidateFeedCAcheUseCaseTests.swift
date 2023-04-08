@@ -11,6 +11,13 @@ final class ValidateFeedCAcheUseCaseTests: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [.retrieveFromCache])
     }
     
+    func test_validateCache_deletesCacheOnRetrievalError() {
+        let (sut, store) = makeSUT()
+        sut.validateCache()
+        store.completeRetrieval(with: anyNSError())
+        XCTAssertEqual(store.receivedMessages, [.retrieveFromCache, .deleteCachedFeed])
+    }
+
     // MARK: - Helpers
 
     func uniqueImage() -> FeedImage {
