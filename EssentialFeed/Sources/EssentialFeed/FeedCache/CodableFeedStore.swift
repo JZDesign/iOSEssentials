@@ -7,44 +7,59 @@ public class CodableFeedStore: FeedStore {
         self.storeURL = storeURL
     }
     
-    private struct Cache: Codable {
-        let feed: [CodableFeedImage]
-        let timeStamp: Date
-    }
+    private let queue = DispatchQueue(label: "\(CodableFeedStore.self)Queue", qos: .userInitiated)
+    
+    // MARK: - FeedStore Implementation
 
     public func retrieve(completion: @escaping RetrievalCompletion) {
-        guard let data = try? Data(contentsOf: storeURL) else {
-            completion(.empty)
-            return
-        }
-        do {
-            let cache = try JSONDecoder().decode(Cache.self, from: data)
-            completion(.found(feed: cache.feed.map(\.toLocalFeedImage), timeStamp: cache.timeStamp))
-        } catch {
-            completion(.failure(error))
+        let storeURLSurvivingSelf = self.storeURL
+        queue.async {
+            guard let data = try? Data(contentsOf: storeURLSurvivingSelf) else {
+                completion(.empty)
+                return
+            }
+            do {
+                let cache = try JSONDecoder().decode(Cache.self, from: data)
+                completion(.found(feed: cache.feed.map(\.toLocalFeedImage), timeStamp: cache.timeStamp))
+            } catch {
+                completion(.failure(error))
+            }
         }
     }
     
     public func deleteCachedFeed(completion: @escaping DeletionCompletion) {
-        guard FileManager.default.fileExists(atPath: storeURL.path) else {
-            return completion(nil)
-        }
-        do {
-            try FileManager.default.removeItem(at: storeURL)
-            completion(nil)
-        } catch {
-            completion(error)
+        let storeURLSurvivingSelf = self.storeURL
+        queue.async {
+            guard FileManager.default.fileExists(atPath: storeURLSurvivingSelf.path) else {
+                return completion(nil)
+            }
+            do {
+                try FileManager.default.removeItem(at: storeURLSurvivingSelf)
+                completion(nil)
+            } catch {
+                completion(error)
+            }
         }
     }
     
     public func insert(_ items: [LocalFeedImage], timeStamp: Date, completion: @escaping InsertionCompletion) {
-        do {
-            let data = try JSONEncoder().encode(Cache(feed: items.map(CodableFeedImage.from), timeStamp: timeStamp))
-            try data.write(to: storeURL)
-            completion(nil)
-        } catch {
-            completion(error)
+        let storeURLSurvivingSelf = self.storeURL
+        queue.async {
+            do {
+                let data = try JSONEncoder().encode(Cache(feed: items.map(CodableFeedImage.from), timeStamp: timeStamp))
+                try data.write(to: storeURLSurvivingSelf)
+                completion(nil)
+            } catch {
+                completion(error)
+            }
         }
+    }
+}
+
+private extension CodableFeedStore {
+    struct Cache: Codable {
+        let feed: [CodableFeedImage]
+        let timeStamp: Date
     }
 }
 

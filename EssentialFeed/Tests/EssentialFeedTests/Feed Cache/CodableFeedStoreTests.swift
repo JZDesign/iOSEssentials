@@ -127,6 +127,31 @@ final class FeedStoreTests: XCTestCase {
         expect(sut, toRetrieve: .empty)
     }
     
+    func test_storeSideEffects_runSerially() throws {
+        let sut = makeSUT()
+        let operation1 = expectation(description: "Operation 1")
+        let operation2 = expectation(description: "Operation 2")
+        let operation3 = expectation(description: "Operation 3")
+        var completedOrder = [XCTestExpectation]()
+
+        sut.insert(uniqueImageFeed().local, timeStamp: Date()) { _ in
+            completedOrder.append(operation1)
+            operation1.fulfill()
+        }
+
+        sut.deleteCachedFeed { _ in
+            completedOrder.append(operation2)
+            operation2.fulfill()
+        }
+
+        sut.insert(uniqueImageFeed().local, timeStamp: Date()) { _ in
+            completedOrder.append(operation3)
+            operation3.fulfill()
+        }
+
+        wait(for: [operation1, operation2, operation3], timeout: 0.5)
+        XCTAssertEqual(completedOrder, [operation1, operation2, operation3], "Expected side-effects to run in order but they did not")
+    }
     
     // MARK: - HELPERS
     
