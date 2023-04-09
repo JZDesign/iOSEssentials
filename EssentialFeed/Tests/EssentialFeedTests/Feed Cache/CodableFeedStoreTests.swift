@@ -2,12 +2,12 @@ import XCTest
 import EssentialFeed
 import EssentialFeedAPITestUtilities
 
-final class CodableFeedStoreTests: XCTestCase {
+final class FeedStoreTests: XCTestCase {
     let testSpecificStoreURL = FileManager
         .default
         .urls(for: .cachesDirectory, in: .userDomainMask)
         .first!
-        .appendingPathComponent("\(type(of: CodableFeedStoreTests.self)).store")
+        .appendingPathComponent("\(type(of: FeedStoreTests.self)).store")
 
     override func setUp() {
         super.setUp()
@@ -130,12 +130,12 @@ final class CodableFeedStoreTests: XCTestCase {
     
     // MARK: - HELPERS
     
-    func makeSUT(storeURL: URL? = nil, file: StaticString = #file, line: UInt = #line) -> CodableFeedStore {
+    func makeSUT(storeURL: URL? = nil, file: StaticString = #file, line: UInt = #line) -> FeedStore {
         createAndTrackMemoryLeaks(CodableFeedStore(storeURL: storeURL ?? testSpecificStoreURL), file: file, line: line)
     }
     
     func expect(
-        _ sut: CodableFeedStore,
+        _ sut: FeedStore,
         toRetrieve expectedResult: RetrieveCachedFeedResult,
         file: StaticString = #file,
         line: UInt = #line
@@ -161,7 +161,7 @@ final class CodableFeedStoreTests: XCTestCase {
     @discardableResult
     func insert(
         _ cache: (feed: [LocalFeedImage], timeStamp: Date),
-        to sut: CodableFeedStore,
+        to sut: FeedStore,
         file: StaticString = #file,
         line: UInt = #line
     ) -> Error? {
@@ -178,7 +178,7 @@ final class CodableFeedStoreTests: XCTestCase {
     
     @discardableResult
     func delete(
-        from sut: CodableFeedStore,
+        from sut: FeedStore,
         file: StaticString = #file,
         line: UInt = #line
     ) -> Error? {
