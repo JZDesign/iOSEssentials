@@ -75,11 +75,20 @@ final class CodableFeedStoreTests: XCTestCase {
         insert((feed, timeStamp: timestamp), to: sut)
         expect(sut, toRetrieve: .found(feed: feed, timeStamp: timestamp))
         
-        
         let latestFeed = uniqueImageFeed().local
         let latestTimestamp = Date()
         insert((latestFeed, timeStamp: latestTimestamp), to: sut)
         expect(sut, toRetrieve: .found(feed: latestFeed, timeStamp: latestTimestamp))
+    }
+    
+    func test_insert_deliversErrorOnInsertionError() {
+        let invalidURL = URL(string: "invalid://store-url")!
+        let sut = makeSUT(storeURL: invalidURL)
+        
+        let feed = uniqueImageFeed().local
+        let timestamp = Date()
+        let insertionError = insert((feed, timeStamp: timestamp), to: sut)
+        XCTAssertNotNil(insertionError, "Expected cace to fail with an error due to the invalid cache url")
     }
 
     // MARK: - HELPERS
@@ -112,18 +121,21 @@ final class CodableFeedStoreTests: XCTestCase {
         wait(for: [expectation], timeout: 0.1)
     }
     
+    @discardableResult
     func insert(
         _ cache: (feed: [LocalFeedImage], timeStamp: Date),
         to sut: CodableFeedStore,
         file: StaticString = #file,
         line: UInt = #line
-    ) {
+    ) -> Error? {
         let expectation = expectation(description: "Wait for insert")
+        var result: Error?
         sut.insert(cache.feed, timeStamp: cache.timeStamp) { error in
-            XCTAssertNil(error)
+            result = error
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 0.1)
+        return result
     }
 }
 
@@ -158,9 +170,13 @@ class CodableFeedStore: FeedStore {
     }
     
     func insert(_ items: [LocalFeedImage], timeStamp: Date, completion: @escaping InsertionCompletion) {
-        let data = try! JSONEncoder().encode(Cache(feed: items.map(CodableFeedImage.from), timeStamp: timeStamp))
-        try! data.write(to: storeURL)
-        completion(nil)
+        do {
+            let data = try JSONEncoder().encode(Cache(feed: items.map(CodableFeedImage.from), timeStamp: timeStamp))
+            try data.write(to: storeURL)
+            completion(nil)
+        } catch {
+            completion(error)
+        }
     }
 }
 
