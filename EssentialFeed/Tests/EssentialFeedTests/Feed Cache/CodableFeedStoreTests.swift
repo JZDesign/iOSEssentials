@@ -3,14 +3,20 @@ import EssentialFeed
 import EssentialFeedAPITestUtilities
 
 final class CodableFeedStoreTests: XCTestCase {
+    let url = FileManager
+        .default
+        .urls(for: .documentDirectory, in: .userDomainMask)
+        .first!
+        .appendingPathComponent("image-feed.store")
+
     override func setUp() {
         super.setUp()
-        CodableFeedStore().deleteCachedFeed { _ in }
+        CodableFeedStore(storeURL: url).deleteCachedFeed { _ in }
     }
 
     override func tearDown() {
         super.tearDown()
-        CodableFeedStore().deleteCachedFeed { _ in }
+        CodableFeedStore(storeURL: url).deleteCachedFeed { _ in }
     }
     
     func test_retrieve_deliversEmptyWhenCacheIsEmpty() throws {
@@ -71,16 +77,16 @@ final class CodableFeedStoreTests: XCTestCase {
     // MARK: - HELPERS
     
     func makeSUT(file: StaticString = #file, line: UInt = #line) -> CodableFeedStore {
-        createAndTrackMemoryLeaks(CodableFeedStore(), file: file, line: line)
+        createAndTrackMemoryLeaks(CodableFeedStore(storeURL: url), file: file, line: line)
     }
 }
 
 class CodableFeedStore: FeedStore {
-    private let storeURL = FileManager
-        .default
-        .urls(for: .documentDirectory, in: .userDomainMask)
-        .first!
-        .appendingPathComponent("image-feed.store")
+    let storeURL: URL
+    
+    init(storeURL: URL) {
+        self.storeURL = storeURL
+    }
     
     private struct Cache: Codable {
         let feed: [CodableFeedImage]
