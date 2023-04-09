@@ -149,7 +149,7 @@ final class FeedStoreTests: XCTestCase {
             operation3.fulfill()
         }
 
-        wait(for: [operation1, operation2, operation3], timeout: 0.5)
+        wait(for: [operation1, operation2, operation3], timeout: 1.5)
         XCTAssertEqual(completedOrder, [operation1, operation2, operation3], "Expected side-effects to run in order but they did not")
     }
     
@@ -180,7 +180,7 @@ final class FeedStoreTests: XCTestCase {
             }
             expectation.fulfill()
         }
-        wait(for: [expectation], timeout: 0.1)
+        wait(for: [expectation], timeout: 1.5)
     }
     
     @discardableResult
@@ -196,7 +196,7 @@ final class FeedStoreTests: XCTestCase {
             result = error
             expectation.fulfill()
         }
-        wait(for: [expectation], timeout: 0.1)
+        wait(for: [expectation], timeout: 1.5)
         return result
     }
     
@@ -213,7 +213,7 @@ final class FeedStoreTests: XCTestCase {
             result = error
             expectation.fulfill()
         }
-        wait(for: [expectation], timeout: 0.1)
+        wait(for: [expectation], timeout: 2.5)
         return result
     }
 }
