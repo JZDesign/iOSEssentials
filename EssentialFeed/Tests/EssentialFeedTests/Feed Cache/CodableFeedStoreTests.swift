@@ -3,7 +3,7 @@ import EssentialFeed
 import EssentialFeedAPITestUtilities
 
 final class CodableFeedStoreTests: XCTestCase {
-    let url = FileManager
+    let testSpecificStoreURL = FileManager
         .default
         .urls(for: .cachesDirectory, in: .userDomainMask)
         .first!
@@ -20,7 +20,7 @@ final class CodableFeedStoreTests: XCTestCase {
     }
     
     private func ensureEmptyStoreState() {
-        CodableFeedStore(storeURL: url).deleteCachedFeed { _ in }
+        CodableFeedStore(storeURL: testSpecificStoreURL).deleteCachedFeed { _ in }
     }
     
     func test_retrieve_deliversEmptyWhenCacheIsEmpty() throws {
@@ -34,7 +34,7 @@ final class CodableFeedStoreTests: XCTestCase {
         expect(sut, toRetrieve: .empty)
     }
     
-    func test_retrieveAfterInserting_deliversInsertedValues() throws {
+    func test_retrieve_deliversFoundValuesOnNonEmptyCache() throws {
         let sut = makeSUT()
         let feed = uniqueImageFeed().local
         let timestamp = Date()
@@ -53,10 +53,16 @@ final class CodableFeedStoreTests: XCTestCase {
         expect(sut, toRetrieve: .found(feed: feed, timeStamp: timestamp))
     }
     
+    func test_retrieve_deliversFailureOnRetrievalError() throws {
+        let sut = makeSUT(storeURL: testSpecificStoreURL)
+        try! "invalid data".write(to: testSpecificStoreURL, atomically: false, encoding: .utf8)
+        expect(sut, toRetrieve: .failure(anyNSError()))
+    }
+
     // MARK: - HELPERS
     
-    func makeSUT(file: StaticString = #file, line: UInt = #line) -> CodableFeedStore {
-        createAndTrackMemoryLeaks(CodableFeedStore(storeURL: url), file: file, line: line)
+    func makeSUT(storeURL: URL? = nil, file: StaticString = #file, line: UInt = #line) -> CodableFeedStore {
+        createAndTrackMemoryLeaks(CodableFeedStore(storeURL: storeURL ?? testSpecificStoreURL), file: file, line: line)
     }
     
     func expect(
@@ -69,7 +75,8 @@ final class CodableFeedStoreTests: XCTestCase {
         
         sut.retrieve { retrievedResult in
             switch (expectedResult, retrievedResult) {
-            case (.empty, .empty):
+            case (.empty, .empty),
+                (.failure, .failure):
                 break
             case let (.found(expectedFeed, expectedTimestamp), .found(retrievedFeed, retrievedTimestamp)):
                 XCTAssertEqual(expectedFeed, retrievedFeed, file: file, line: line)
@@ -114,8 +121,12 @@ class CodableFeedStore: FeedStore {
             completion(.empty)
             return
         }
-        let cache = try! JSONDecoder().decode(Cache.self, from: data)
-        completion(.found(feed: cache.feed.map(\.toLocalFeedImage), timeStamp: cache.timeStamp))
+        do {
+            let cache = try JSONDecoder().decode(Cache.self, from: data)
+            completion(.found(feed: cache.feed.map(\.toLocalFeedImage), timeStamp: cache.timeStamp))
+        } catch {
+            completion(.failure(error))
+        }
     }
     
     func deleteCachedFeed(completion: @escaping DeletionCompletion) {

@@ -15,26 +15,6 @@ public extension XCTestCase {
         return instance
     }
     
-    func anyURL() -> URL {
-        URL(string: "https://a-url.com")!
-    }
-    
-    func nonHTTPURLResponse() -> URLResponse {
-        URLResponse(url: anyURL(), mimeType: nil, expectedContentLength: 1, textEncodingName: nil)
-    }
-    
-    func anyHTTPURLResponse() -> HTTPURLResponse {
-        HTTPURLResponse(url: anyURL(), mimeType: nil, expectedContentLength: 1, textEncodingName: nil)
-    }
-    
-    func anyData() -> Data {
-        Data("any data".utf8)
-    }
-    
-    func anyNSError() -> NSError {
-        NSError(domain: #function, code: #line)
-    }
-    
     func uniqueImage() -> FeedImage {
         FeedImage(id: UUID(), description: "any", location: "any", url: anyURL())
     }
@@ -62,4 +42,24 @@ private extension Date {
     func adding(days: Int) -> Date {
         Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
     }
+}
+
+public func anyURL() -> URL {
+    URL(string: "https://a-url.com")!
+}
+
+public func nonHTTPURLResponse() -> URLResponse {
+    URLResponse(url: anyURL(), mimeType: nil, expectedContentLength: 1, textEncodingName: nil)
+}
+
+public func anyHTTPURLResponse() -> HTTPURLResponse {
+    HTTPURLResponse(url: anyURL(), mimeType: nil, expectedContentLength: 1, textEncodingName: nil)
+}
+
+public func anyData() -> Data {
+    Data("any data".utf8)
+}
+
+public func anyNSError() -> NSError {
+    NSError(domain: #function, code: #line)
 }
