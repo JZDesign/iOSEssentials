@@ -58,6 +58,29 @@ final class CodableFeedStoreTests: XCTestCase {
         try! "invalid data".write(to: testSpecificStoreURL, atomically: false, encoding: .utf8)
         expect(sut, toRetrieve: .failure(anyNSError()))
     }
+    
+    func test_retrieve_hasNoSideEffectsOnFailure () throws {
+        let sut = makeSUT(storeURL: testSpecificStoreURL)
+        try! "invalid data".write(to: testSpecificStoreURL, atomically: false, encoding: .utf8)
+        expect(sut, toRetrieve: .failure(anyNSError()))
+        expect(sut, toRetrieve: .failure(anyNSError()))
+    }
+    
+    
+    func test_insert_overridesPreviouslyCachedValues() {
+        let sut = makeSUT()
+        
+        let feed = uniqueImageFeed().local
+        let timestamp = Date()
+        insert((feed, timeStamp: timestamp), to: sut)
+        expect(sut, toRetrieve: .found(feed: feed, timeStamp: timestamp))
+        
+        
+        let latestFeed = uniqueImageFeed().local
+        let latestTimestamp = Date()
+        insert((latestFeed, timeStamp: latestTimestamp), to: sut)
+        expect(sut, toRetrieve: .found(feed: latestFeed, timeStamp: latestTimestamp))
+    }
 
     // MARK: - HELPERS
     
