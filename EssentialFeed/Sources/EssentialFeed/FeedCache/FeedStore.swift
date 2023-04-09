@@ -5,8 +5,15 @@ public protocol FeedStore {
     typealias InsertionCompletion = (Error?) -> Void
     typealias RetrievalCompletion = (RetrieveCachedFeedResult) -> Void
 
+    
+    /// The completeion handler can be invoked on any thread
+    /// Clients are responsible to dispatch to the appropriate threads if needed.
     func deleteCachedFeed(completion: @escaping DeletionCompletion)
+    /// The completeion handler can be invoked on any thread
+    /// Clients are responsible to dispatch to the appropriate threads if needed.
     func insert(_ items: [LocalFeedImage], timeStamp: Date, completion: @escaping InsertionCompletion)
+    /// The completeion handler can be invoked on any thread
+    /// Clients are responsible to dispatch to the appropriate threads if needed.
     func retrieve(completion: @escaping RetrievalCompletion)
 }
 
