@@ -5,17 +5,21 @@ import EssentialFeedAPITestUtilities
 final class CodableFeedStoreTests: XCTestCase {
     let url = FileManager
         .default
-        .urls(for: .documentDirectory, in: .userDomainMask)
+        .urls(for: .cachesDirectory, in: .userDomainMask)
         .first!
-        .appendingPathComponent("image-feed.store")
+        .appendingPathComponent("\(type(of: CodableFeedStoreTests.self)).store")
 
     override func setUp() {
         super.setUp()
-        CodableFeedStore(storeURL: url).deleteCachedFeed { _ in }
+        ensureEmptyStoreState()
     }
 
     override func tearDown() {
         super.tearDown()
+        ensureEmptyStoreState()
+    }
+    
+    private func ensureEmptyStoreState() {
         CodableFeedStore(storeURL: url).deleteCachedFeed { _ in }
     }
     

@@ -4,14 +4,14 @@
 - Retrieve
     ✅ Empty Cache
     ✅ Empty Cache twice returns empty -- no side effects.
-    - Non-Empty Cache returns data
+    ✅ Non-Empty Cache returns data
     - Non-Empty Cache twice returns same data (no side effects)
     - Error returns invalid data when applicable
     - Error twice return same error
 
 - Insert
-    - To empty cache stores data
-    - To non-empty cache stores data and overwrites old data
+    ✅ Insert to empty cache stores data
+    - Insert to non-empty cache stores data and overwrites old data
     - Error (e.g. no write permissions)
 
 - Delete
