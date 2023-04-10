@@ -2,12 +2,12 @@ import XCTest
 import EssentialFeed
 import EssentialFeedAPITestUtilities
 
-final class FeedStoreTests: XCTestCase {
+final class CodableFeedStoreTests: XCTestCase, FailableFeedStoreSpecs {
     let testSpecificStoreURL = FileManager
         .default
         .urls(for: .cachesDirectory, in: .userDomainMask)
         .first!
-        .appendingPathComponent("\(type(of: FeedStoreTests.self)).store")
+        .appendingPathComponent("\(type(of: CodableFeedStoreTests.self)).store")
 
     override func setUp() {
         super.setUp()
@@ -294,37 +294,4 @@ final class FeedStoreTests: XCTestCase {
         wait(for: [expectation], timeout: 2.5)
         return result
     }
-}
-
-protocol FailableRetrieveFeedStoreSpecs {
-    func test_retrieve_deliversFailureOnRetrievalError()
-    func test_retrieve_hasNoSideEffectsOnFailure()
-}
-
-protocol FailableInsertFeedStoreSpecs {
-    func test_insert_deliversErrorOnInsertionError()
-    func test_insert_hasNoSideEffectsOnInsertionError()
-}
-
-protocol FailableDeleteFeedStoreSpecs {
-    func test_delete_deliversErrorOnDeletionError()
-    func test_delete_hasNoSideEffectsErrorOnDeletionError()
-}
-
-protocol FeedStoreSpecs {
-    func test_retrieve_deliversEmptyWhenCacheIsEmpty()
-    func test_retrieve_hasNoSideEffectsOnEmptyCache()
-    func test_retrieve_deliversFoundValuesOnNonEmptyCache()
-    func test_retrieve_hasNoSideEffectsOnNonEmptyCache()
-    
-    func test_insert_overridesPreviouslyCachedValues()
-    func test_insert_doesNotDeliverErrorOnEmptyCache()
-    func test_insert_doesNotDeliverErrorOnNonEmptyCache()
-    
-    func test_delete_hasNoSideEffectsOnEmptyCache()
-    func test_delete_emptiesPreviouslyInsertedCache()
-    func test_delete_doesNotDeliverErrorOnEmptyCache()
-    func test_delete_doesNotDeliverErrorOnNonEmptyCache()
-    
-    func test_storeSideEffects_runSerially()
 }
