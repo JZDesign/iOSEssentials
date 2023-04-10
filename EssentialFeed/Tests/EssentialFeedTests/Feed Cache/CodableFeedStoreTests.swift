@@ -26,33 +26,22 @@ final class CodableFeedStoreTests: XCTestCase, FailableFeedStoreSpecs {
     // MARK: - RETRIEVE
 
     func test_retrieve_deliversEmptyWhenCacheIsEmpty() {
-        expect(makeSUT(), toRetrieve: .empty)
+        assertThatRetrieveDeliversEmptyOnEmptyCache(on: makeSUT())
     }
     
     func test_retrieve_hasNoSideEffectsOnEmptyCache() {
-        let sut = makeSUT()
-        
-        expect(sut, toRetrieve: .empty, times: 2)
+        assertThatRetrieveHasNoSideEffectsOnEmptyCache(on: makeSUT())
     }
     
     func test_retrieve_deliversFoundValuesOnNonEmptyCache() {
-        let sut = makeSUT()
-        let feed = uniqueImageFeed().local
-        let timestamp = Date()
-
-        insert((feed, timeStamp: timestamp), to: sut)
-        expect(sut, toRetrieve: .found(feed: feed, timeStamp: timestamp))
+        assertThatRetrieveDeliversFoundValuesOnNonEmptyCache(on: makeSUT())
     }
     
     func test_retrieve_hasNoSideEffectsOnNonEmptyCache() {
-        let sut = makeSUT()
-        let feed = uniqueImageFeed().local
-        let timestamp = Date()
-        
-        insert((feed, timeStamp: timestamp), to: sut)
-        expect(sut, toRetrieve: .found(feed: feed, timeStamp: timestamp), times: 2)
+        assertThatRetrieveHasNoSideEffectsOnNonEmptyCache(on: makeSUT())
     }
     
+    // TODO: Finish moving the tests into the extensions files.
     func test_retrieve_deliversFailureOnRetrievalError() {
         let url = testSpecificStoreURL
         let sut = makeSUT(storeURL: url)
