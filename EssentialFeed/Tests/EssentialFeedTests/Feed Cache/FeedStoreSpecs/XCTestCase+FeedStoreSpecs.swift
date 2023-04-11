@@ -1,37 +1,9 @@
+import EssentialFeedAPITestUtilities
 import EssentialFeed
 import XCTest
 
 extension FeedStoreSpecs where Self: XCTestCase {
     
-    // MARK: - Assertions
-    
-    // TODO: move these assertions into separate extensions files per spec protocol
-    func assertThatRetrieveDeliversEmptyOnEmptyCache(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
-        expect(sut, toRetrieve: .empty, file: file, line: line)
-    }
-
-    func assertThatRetrieveHasNoSideEffectsOnEmptyCache(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
-        expect(sut, toRetrieve: .empty, times: 2, file: file, line: line)
-    }
-    
-    func assertThatRetrieveDeliversFoundValuesOnNonEmptyCache(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
-        let feed = uniqueImageFeed().local
-        let timestamp = Date()
-
-        insert((feed, timeStamp: timestamp), to: sut, file: file, line: line)
-        expect(sut, toRetrieve: .found(feed: feed, timeStamp: timestamp), file: file, line: line)
-    }
-    
-    func assertThatRetrieveHasNoSideEffectsOnNonEmptyCache(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
-        let feed = uniqueImageFeed().local
-        let timestamp = Date()
-
-        insert((feed, timeStamp: timestamp), to: sut, file: file, line: line)
-        expect(sut, toRetrieve: .found(feed: feed, timeStamp: timestamp), times: 2, file: file, line: line)
-    }
-
-    // MARK: - Helpers
-
     func expect(
         _ sut: FeedStore,
         toRetrieve expectedResult: RetrieveCachedFeedResult,
