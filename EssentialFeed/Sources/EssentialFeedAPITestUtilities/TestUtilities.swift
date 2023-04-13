@@ -1,4 +1,5 @@
 import Foundation
+import EssentialFeed
 import XCTest
 
 public extension XCTestCase {
@@ -14,24 +15,51 @@ public extension XCTestCase {
         return instance
     }
     
-    func anyURL() -> URL {
-        URL(string: "https://a-url.com")!
+    func uniqueImage() -> FeedImage {
+        FeedImage(id: UUID(), description: "any", location: "any", url: anyURL())
     }
     
-    func nonHTTPURLResponse() -> URLResponse {
-        URLResponse(url: anyURL(), mimeType: nil, expectedContentLength: 1, textEncodingName: nil)
+    func uniqueImageFeed() -> (models: [FeedImage], local: [LocalFeedImage]) {
+        let item1 = uniqueImage()
+        let item2 = uniqueImage()
+        return ([item1, item2], [LocalFeedImage.from(item1), LocalFeedImage.from(item2)])
     }
-    
-    func anyHTTPURLResponse() -> HTTPURLResponse {
-        HTTPURLResponse(url: anyURL(), mimeType: nil, expectedContentLength: 1, textEncodingName: nil)
+}
+
+public extension Date {
+    private var maxCacheAge: Int { 7 }
+
+    func minusFeedCacheMaxAge() -> Date {
+        adding(days: -maxCacheAge)
     }
-    
-    func anyData() -> Data {
-        Data("any data".utf8)
+
+    func adding(seconds: TimeInterval) -> Date {
+        self + seconds
     }
-    
-    func anyNSError() -> NSError {
-        NSError(domain: #function, code: #line)
+}
+
+private extension Date {
+    func adding(days: Int) -> Date {
+        Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
     }
-    
+}
+
+public func anyURL() -> URL {
+    URL(string: "https://a-url.com")!
+}
+
+public func nonHTTPURLResponse() -> URLResponse {
+    URLResponse(url: anyURL(), mimeType: nil, expectedContentLength: 1, textEncodingName: nil)
+}
+
+public func anyHTTPURLResponse() -> HTTPURLResponse {
+    HTTPURLResponse(url: anyURL(), mimeType: nil, expectedContentLength: 1, textEncodingName: nil)
+}
+
+public func anyData() -> Data {
+    Data("any data".utf8)
+}
+
+public func anyNSError() -> NSError {
+    NSError(domain: #function, code: #line)
 }
