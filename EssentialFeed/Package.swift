@@ -18,7 +18,9 @@ let package = Package(
     targets: [
         .target(
             name: "EssentialFeed",
-            dependencies: []),
+            dependencies: [],
+            resources: [.process("Resources")]
+        ),
         .target(
             name: "EssentialFeedAPITestUtilities",
             dependencies: ["EssentialFeed"]),
