@@ -25,6 +25,9 @@ let package = Package(
             name: "EssentialFeedAPITestUtilities",
             dependencies: ["EssentialFeed"]),
         .testTarget(
+            name: "EssentialFeedCacheIntegrationTests",
+            dependencies: ["EssentialFeed"]),
+        .testTarget(
             name: "EssentialFeedTests",
             dependencies: ["EssentialFeed", "EssentialFeedAPITestUtilities"]),
         .testTarget(
