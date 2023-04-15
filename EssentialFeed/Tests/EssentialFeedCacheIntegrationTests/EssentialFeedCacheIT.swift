@@ -41,6 +41,19 @@ final class EssentialFeedCacheIT: XCTestCase {
         expect(loadSUT, toRetrieve: .success(feed))
     }
     
+    func test_save_overridesItemsSavedOnASeparateInstance() {
+        let loadSUT = makeSUT()
+        let firstSaveSUT = makeSUT()
+        let secondSaveSUT = makeSUT()
+        
+        let firstSaveFeed = uniqueImageFeed().models
+        let secondSaveFeed = uniqueImageFeed().models
+                
+        expect(firstSaveSUT, toSave: firstSaveFeed)
+        expect(secondSaveSUT, toSave: secondSaveFeed)
+        expect(loadSUT, toRetrieve: .success(secondSaveFeed))
+    }
+    
     // MARK: - Helpers
 
     func makeSUT(file: StaticString = #file, line: UInt = #line) -> LocalFeedLoader {
