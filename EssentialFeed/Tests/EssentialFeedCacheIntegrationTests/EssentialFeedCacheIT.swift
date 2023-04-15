@@ -4,6 +4,16 @@ import EssentialFeedAPITestUtilities
 
 final class EssentialFeedCacheIT: XCTestCase {
 
+    override func setUp() {
+        super.setUp()
+        Self.deleteStoredArtifacts()
+    }
+    
+    override func tearDown() {
+        super.tearDown()
+        Self.deleteStoredArtifacts()
+    }
+    
     func test_load_deliversNoItemsOnEmptyCache() throws {
         let sut = makeSUT()
         let expectation = expectation(description: #function)
@@ -20,8 +30,37 @@ final class EssentialFeedCacheIT: XCTestCase {
         
         wait(for: [expectation], timeout: 0.5)
     }
+    
+    func test_load_deliversItemsSavedOnSeparateInstances() {
+        let loadSUT = makeSUT()
+        let saveSUT = makeSUT()
+        
+        let feed = uniqueImageFeed().models
+        
+        let saveExpectation = expectation(description: "\(#function) save")
+        
+        saveSUT.save(feed) { saveError in
+            XCTAssertNil(saveError)
+            saveExpectation.fulfill()
+        }
+        wait(for: [saveExpectation], timeout: 0.2)
+        
+        let loadExpectation = expectation(description: "\(#function) load")
+        loadSUT.load { result in
+            switch result {
+            case .failure(let error):
+                XCTFail("\(#function): \(error.localizedDescription)")
+            case .success(let feedResult):
+                XCTAssertEqual(feedResult, feed)
+            }
+            loadExpectation.fulfill()
+        }
+        wait(for: [loadExpectation], timeout: 0.2)
+    }
+    
+    // MARK: - Helpers
 
-    func makeSUT(file: StaticString = #file, line: UInt = #line) -> FeedLoader {
+    func makeSUT(file: StaticString = #file, line: UInt = #line) -> LocalFeedLoader {
         // using this bundle cause a model not found error. Why?
 //        let bundle = Bundle(for: CoreDataFeedStore.self)
         let store = try! CoreDataFeedStore(storeURL: Self.testSpecificStoreURL)//, bundle: bundle)
@@ -42,4 +81,8 @@ final class EssentialFeedCacheIT: XCTestCase {
     
     static let testSpecificStoreURL: URL = cachesDirectory
         .appendingPathComponent("\(type(of: EssentialFeedCacheIT.self)).store")
+    
+    private static func deleteStoredArtifacts() {
+        try? FileManager.default.removeItem(at: testSpecificStoreURL)
+    }
 }
