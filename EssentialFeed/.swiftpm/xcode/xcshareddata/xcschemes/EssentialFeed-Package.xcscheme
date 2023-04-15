@@ -14,10 +14,52 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "EssentialFeed_EssentialFeed"
+               BuildableName = "EssentialFeed_EssentialFeed"
+               BlueprintName = "EssentialFeed_EssentialFeed"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "EssentialFeed"
                BuildableName = "EssentialFeed"
                BlueprintName = "EssentialFeed"
-               ReferencedContainer = "container:EssentialFeed">
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "EssentialFeedAPITestUtilities"
+               BuildableName = "EssentialFeedAPITestUtilities"
+               BlueprintName = "EssentialFeedAPITestUtilities"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "EssentialFeedAPIEndToEndTests"
+               BuildableName = "EssentialFeedAPIEndToEndTests"
+               BlueprintName = "EssentialFeedAPIEndToEndTests"
+               ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -31,7 +73,7 @@
                BlueprintIdentifier = "EssentialFeedTests"
                BuildableName = "EssentialFeedTests"
                BlueprintName = "EssentialFeedTests"
-               ReferencedContainer = "container:EssentialFeed">
+               ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -40,42 +82,26 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES"
-      enableThreadSanitizer = "YES"
-      codeCoverageEnabled = "YES"
-      onlyGenerateCoverageForSpecifiedTargets = "YES">
-      <CodeCoverageTargets>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "EssentialFeed"
-            BuildableName = "EssentialFeed"
-            BlueprintName = "EssentialFeed"
-            ReferencedContainer = "container:EssentialFeed">
-         </BuildableReference>
-      </CodeCoverageTargets>
+      shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
          <TestableReference
-            skipped = "NO"
-            parallelizable = "YES"
-            testExecutionOrdering = "random">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "EssentialFeedTests"
-               BuildableName = "EssentialFeedTests"
-               BlueprintName = "EssentialFeedTests"
-               ReferencedContainer = "container:EssentialFeed">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES"
-            testExecutionOrdering = "random">
+            skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "EssentialFeedAPIEndToEndTests"
                BuildableName = "EssentialFeedAPIEndToEndTests"
                BlueprintName = "EssentialFeedAPIEndToEndTests"
-               ReferencedContainer = "container:EssentialFeed">
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "EssentialFeedTests"
+               BuildableName = "EssentialFeedTests"
+               BlueprintName = "EssentialFeedTests"
+               ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -85,7 +111,7 @@
                BlueprintIdentifier = "EssentialFeedCacheIntegrationTests"
                BuildableName = "EssentialFeedCacheIntegrationTests"
                BlueprintName = "EssentialFeedCacheIntegrationTests"
-               ReferencedContainer = "container:EssentialFeed">
+               ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -110,10 +136,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "EssentialFeed"
-            BuildableName = "EssentialFeed"
-            BlueprintName = "EssentialFeed"
-            ReferencedContainer = "container:EssentialFeed">
+            BlueprintIdentifier = "EssentialFeed_EssentialFeed"
+            BuildableName = "EssentialFeed_EssentialFeed"
+            BlueprintName = "EssentialFeed_EssentialFeed"
+            ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

@@ -17,21 +17,7 @@
                BlueprintIdentifier = "EssentialFeed"
                BuildableName = "EssentialFeed"
                BlueprintName = "EssentialFeed"
-               ReferencedContainer = "container:EssentialFeed">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "EssentialFeedTests"
-               BuildableName = "EssentialFeedTests"
-               BlueprintName = "EssentialFeedTests"
-               ReferencedContainer = "container:EssentialFeed">
+               ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -41,7 +27,6 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
-      enableThreadSanitizer = "YES"
       codeCoverageEnabled = "YES"
       onlyGenerateCoverageForSpecifiedTargets = "YES">
       <CodeCoverageTargets>
@@ -50,34 +35,10 @@
             BlueprintIdentifier = "EssentialFeed"
             BuildableName = "EssentialFeed"
             BlueprintName = "EssentialFeed"
-            ReferencedContainer = "container:EssentialFeed">
+            ReferencedContainer = "container:">
          </BuildableReference>
       </CodeCoverageTargets>
       <Testables>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES"
-            testExecutionOrdering = "random">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "EssentialFeedTests"
-               BuildableName = "EssentialFeedTests"
-               BlueprintName = "EssentialFeedTests"
-               ReferencedContainer = "container:EssentialFeed">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES"
-            testExecutionOrdering = "random">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "EssentialFeedAPIEndToEndTests"
-               BuildableName = "EssentialFeedAPIEndToEndTests"
-               BlueprintName = "EssentialFeedAPIEndToEndTests"
-               ReferencedContainer = "container:EssentialFeed">
-            </BuildableReference>
-         </TestableReference>
          <TestableReference
             skipped = "NO">
             <BuildableReference
@@ -85,7 +46,7 @@
                BlueprintIdentifier = "EssentialFeedCacheIntegrationTests"
                BuildableName = "EssentialFeedCacheIntegrationTests"
                BlueprintName = "EssentialFeedCacheIntegrationTests"
-               ReferencedContainer = "container:EssentialFeed">
+               ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -113,7 +74,7 @@
             BlueprintIdentifier = "EssentialFeed"
             BuildableName = "EssentialFeed"
             BlueprintName = "EssentialFeed"
-            ReferencedContainer = "container:EssentialFeed">
+            ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>
