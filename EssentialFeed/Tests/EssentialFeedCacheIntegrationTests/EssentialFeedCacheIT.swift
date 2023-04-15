@@ -3,7 +3,7 @@ import EssentialFeed
 import EssentialFeedAPITestUtilities
 
 final class EssentialFeedCacheIT: XCTestCase {
-
+    
     override func setUp() {
         super.setUp()
         Self.deleteStoredArtifacts()
@@ -36,26 +36,9 @@ final class EssentialFeedCacheIT: XCTestCase {
         let saveSUT = makeSUT()
         
         let feed = uniqueImageFeed().models
-        
-        let saveExpectation = expectation(description: "\(#function) save")
-        
-        saveSUT.save(feed) { saveError in
-            XCTAssertNil(saveError)
-            saveExpectation.fulfill()
-        }
-        wait(for: [saveExpectation], timeout: 0.2)
-        
-        let loadExpectation = expectation(description: "\(#function) load")
-        loadSUT.load { result in
-            switch result {
-            case .failure(let error):
-                XCTFail("\(#function): \(error.localizedDescription)")
-            case .success(let feedResult):
-                XCTAssertEqual(feedResult, feed)
-            }
-            loadExpectation.fulfill()
-        }
-        wait(for: [loadExpectation], timeout: 0.2)
+                
+        expect(saveSUT, toSave: feed)
+        expect(loadSUT, toRetrieve: .success(feed))
     }
     
     // MARK: - Helpers
@@ -85,4 +68,42 @@ final class EssentialFeedCacheIT: XCTestCase {
     private static func deleteStoredArtifacts() {
         try? FileManager.default.removeItem(at: testSpecificStoreURL)
     }
+    
+    
+    func expect(
+        _ sut: LocalFeedLoader,
+        toRetrieve expectedResult: LocalFeedLoader.LoadResult,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let expectation = expectation(description: "Wait for cache Retrieval")
+        sut.load { retrievedResult in
+            switch (expectedResult, retrievedResult) {
+            case (.success(let expectedFeed), .success(let retrievedFeed)):
+                XCTAssertEqual(expectedFeed, retrievedFeed)
+            case (.failure(let expectedError), .failure(let retrievedError)):
+                XCTAssertEqual(expectedError as NSError, retrievedError as NSError)
+            default:
+                XCTFail("Expected to retrieve \(expectedResult), got \(retrievedResult) instead", file: file, line: line)
+            }
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 0.5)
+    }
+    
+    func expect(
+        _ sut: LocalFeedLoader,
+        toSave feed: [FeedImage],
+        andCompleteWith expectedResult: LocalFeedLoader.SaveResult = nil,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let expectation = expectation(description: "Wait for cache Retrieval")
+        sut.save(feed) { retrievedError in
+            XCTAssertEqual(expectedResult as? NSError, retrievedError as? NSError)
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 0.5)
+    }
+    
 }
