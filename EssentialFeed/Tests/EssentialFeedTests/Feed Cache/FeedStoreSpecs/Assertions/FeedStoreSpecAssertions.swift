@@ -55,12 +55,12 @@ extension FeedStoreSpecs where Self: XCTestCase {
         let feed = uniqueImageFeed().local
         let timestamp = Date()
         insert((feed, timeStamp: timestamp), to: sut)
-        expect(sut, toRetrieve: .found(feed: feed, timeStamp: timestamp))
+        expect(sut, toRetrieve: .found(feed: feed, timeStamp: timestamp), file: file, line: line)
         
         let latestFeed = uniqueImageFeed().local
         let latestTimestamp = Date()
         insert((latestFeed, timeStamp: latestTimestamp), to: sut)
-        expect(sut, toRetrieve: .found(feed: latestFeed, timeStamp: latestTimestamp))
+        expect(sut, toRetrieve: .found(feed: latestFeed, timeStamp: latestTimestamp), file: file, line: line)
     }
 
     func assertThat_Insert_DoesNotDeliverErrorOnEmptyCache(
@@ -68,7 +68,7 @@ extension FeedStoreSpecs where Self: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        expect(sut, toRetrieve: .empty)
+        expect(sut, toRetrieve: .empty, file: file, line: line)
         
         let feed = uniqueImageFeed().local
         let timestamp = Date()
@@ -85,14 +85,14 @@ extension FeedStoreSpecs where Self: XCTestCase {
         let feed = uniqueImageFeed().local
         let timestamp = Date()
         insert((feed, timeStamp: timestamp), to: sut)
-        expect(sut, toRetrieve: .found(feed: feed, timeStamp: timestamp))
+        expect(sut, toRetrieve: .found(feed: feed, timeStamp: timestamp), file: file, line: line)
         
         let latestFeed = uniqueImageFeed().local
         let latestTimestamp = Date()
         let insertionError = insert((latestFeed, timeStamp: latestTimestamp), to: sut)
 
         XCTAssertNil(insertionError)
-        expect(sut, toRetrieve: .found(feed: latestFeed, timeStamp: latestTimestamp))
+        expect(sut, toRetrieve: .found(feed: latestFeed, timeStamp: latestTimestamp), file: file, line: line)
     }
     
     // MARK: - Delete
@@ -105,7 +105,7 @@ extension FeedStoreSpecs where Self: XCTestCase {
         let deletionError = delete(from: sut)
         XCTAssertNil(deletionError)
         
-        expect(sut, toRetrieve: .empty)
+        expect(sut, toRetrieve: .empty, file: file, line: line)
     }
 
     func assertThat_Delete_EmptiesPreviouslyInsertedCache(
@@ -119,7 +119,7 @@ extension FeedStoreSpecs where Self: XCTestCase {
         expect(sut, toRetrieve: .found(feed: feed, timeStamp: timestamp))
         
         delete(from: sut)
-        expect(sut, toRetrieve: .empty)
+        expect(sut, toRetrieve: .empty, file: file, line: line)
     }
 
     func assertThat_Delete_DoesNotDeliverErrorOnEmptyCache(
@@ -127,7 +127,7 @@ extension FeedStoreSpecs where Self: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        expect(sut, toRetrieve: .empty)
+        expect(sut, toRetrieve: .empty, file: file, line: line)
         
         let deletionError = delete(from: sut)
         XCTAssertNil(deletionError)
@@ -141,8 +141,8 @@ extension FeedStoreSpecs where Self: XCTestCase {
         
         let feed = uniqueImageFeed().local
         let timestamp = Date()
-        insert((feed, timeStamp: timestamp), to: sut)
-        expect(sut, toRetrieve: .found(feed: feed, timeStamp: timestamp))
+        insert((feed, timeStamp: timestamp), to: sut, file: file, line: line)
+        expect(sut, toRetrieve: .found(feed: feed, timeStamp: timestamp), file: file, line: line)
         
         let deletionError = delete(from: sut)
         XCTAssertNil(deletionError)

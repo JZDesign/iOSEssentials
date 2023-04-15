@@ -37,7 +37,7 @@ final class CoreDataFeedStoreTests: XCTestCase, FailableFeedStoreSpecs {
     // MARK: - INSERT
 
     func test_insert_overridesPreviouslyCachedValues() {
-//        assertThat_Insert_OverridesPreviouslyCachedValues(on: makeSUT())
+        assertThat_Insert_OverridesPreviouslyCachedValues(on: makeSUT())
     }
     
     func test_insert_deliversErrorOnInsertionError() {
@@ -53,21 +53,21 @@ final class CoreDataFeedStoreTests: XCTestCase, FailableFeedStoreSpecs {
     }
 
     func test_insert_doesNotDeliverErrorOnEmptyCache() {
-//        assertThat_Insert_DoesNotDeliverErrorOnEmptyCache(on: makeSUT())
+        assertThat_Insert_DoesNotDeliverErrorOnEmptyCache(on: makeSUT())
     }
     
     func test_insert_doesNotDeliverErrorOnNonEmptyCache() {
-//        assertThat_Insert_DoesNotDeliverErrorOnNonEmptyCache(on: makeSUT())
+        assertThat_Insert_DoesNotDeliverErrorOnNonEmptyCache(on: makeSUT())
     }
     
     // MARK: - DELETE
     
     func test_delete_hasNoSideEffectsOnEmptyCache() {
-//        assertThat_Delete_HasNoSideEffectsOnEmptyCache(on: makeSUT())
+        assertThat_Delete_HasNoSideEffectsOnEmptyCache(on: makeSUT())
     }
     
     func test_delete_emptiesPreviouslyInsertedCache() {
-//        assertThat_Delete_EmptiesPreviouslyInsertedCache(on: makeSUT())
+        assertThat_Delete_EmptiesPreviouslyInsertedCache(on: makeSUT())
     }
     
     func test_delete_deliversErrorOnDeletionError() {
@@ -84,11 +84,11 @@ final class CoreDataFeedStoreTests: XCTestCase, FailableFeedStoreSpecs {
      }
     
     func test_delete_doesNotDeliverErrorOnEmptyCache() {
-//        assertThat_Delete_DoesNotDeliverErrorOnEmptyCache(on: makeSUT())
+        assertThat_Delete_DoesNotDeliverErrorOnEmptyCache(on: makeSUT())
     }
     
     func test_delete_doesNotDeliverErrorOnNonEmptyCache() {
-//        assertThat_Delete_DoesNotDeliverErrorOnNonEmptyCache(on: makeSUT())
+        assertThat_Delete_DoesNotDeliverErrorOnNonEmptyCache(on: makeSUT())
     }
     
     // MARK: - Serial side effects
