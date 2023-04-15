@@ -94,7 +94,7 @@ final class CoreDataFeedStoreTests: XCTestCase, FailableFeedStoreSpecs {
     // MARK: - Serial side effects
     
     func test_storeSideEffects_runSerially() {
-//        assertThat_StoreSideEffects_RunSerially(on: makeSUT())
+        assertThat_StoreSideEffects_RunSerially(on: makeSUT())
     }
 
     // MARK: - HELPERS
