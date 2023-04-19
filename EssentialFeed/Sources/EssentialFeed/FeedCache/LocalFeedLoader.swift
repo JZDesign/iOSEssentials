@@ -18,10 +18,9 @@ public final class LocalFeedLoader: FeedLoader {
             case let .failure(error):
                 completion(.failure(error))
         
-            case let .found(feed: images, timeStamp: date) where FeedCachePolicy.validate(date, against: self.currentDate()):
-                    completion(.success(images.toFeedImage()))
-
-            case .found, .empty:
+            case let .success(feed) where feed != nil && FeedCachePolicy.validate(feed.unsafelyUnwrapped.timeStamp, against: self.currentDate()):
+                completion(.success(feed.unsafelyUnwrapped.feed.toFeedImage()))
+            case .success:
                 completion(.success([]))
             }
         }
@@ -57,10 +56,10 @@ public extension LocalFeedLoader {
             case .failure:
                 self.store.deleteCachedFeed { _ in }
 
-            case let .found(feed: _, timeStamp: date) where !FeedCachePolicy.validate(date, against: self.currentDate()):
+            case let .success(feed) where feed != nil && !FeedCachePolicy.validate(feed.unsafelyUnwrapped.timeStamp, against: self.currentDate()):
                 self.store.deleteCachedFeed { _ in }
 
-            case .found, .empty:
+            case .success:
                 break
             }
         }

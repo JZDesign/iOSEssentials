@@ -3,8 +3,8 @@ import Foundation
 public protocol FeedStore {
     typealias DeletionCompletion = (Error?) -> Void
     typealias InsertionCompletion = (Error?) -> Void
-    typealias RetrievalCompletion = (RetrieveCachedFeedResult) -> Void
-
+    typealias RetrievalCompletion = (RetrievalResult) -> Void
+    typealias RetrievalResult = Swift.Result<CachedFeed?, Error>
     
     /// The completeion handler can be invoked on any thread
     /// Clients are responsible to dispatch to the appropriate threads if needed.
@@ -17,11 +17,16 @@ public protocol FeedStore {
     func retrieve(completion: @escaping RetrievalCompletion)
 }
 
-public enum RetrieveCachedFeedResult {
-    case empty
-    case found(feed: [LocalFeedImage], timeStamp: Date)
-    case failure(Error)
+public struct CachedFeed: Equatable {
+    public let feed: [LocalFeedImage]
+    public let timeStamp: Date
+    
+    public init(feed: [LocalFeedImage], timeStamp: Date) {
+        self.feed = feed
+        self.timeStamp = timeStamp
+    }
 }
+
 
 /// DTO of the ``FeedImage``
 public struct LocalFeedImage: Equatable {

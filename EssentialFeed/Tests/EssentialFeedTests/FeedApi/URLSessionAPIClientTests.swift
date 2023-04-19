@@ -130,10 +130,10 @@ final class URLSessionAPIClientTests: XCTestCase {
         error: Error?,
         file: StaticString = #file,
         line: UInt = #line
-    ) -> HttpClientResult? {
+    ) -> HttpClient.Result? {
         URLProtocolStub.stub(data: data, response: response, error: error)
         let sut = makeSUT(file: file, line: line)
-        var result: HttpClientResult? = nil
+        var result: HttpClient.Result? = nil
 
         let expectation = expectation(description: #function)
 

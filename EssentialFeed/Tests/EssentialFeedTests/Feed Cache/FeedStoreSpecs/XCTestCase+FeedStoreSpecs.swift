@@ -4,24 +4,23 @@ import XCTest
 
 extension FeedStoreSpecs where Self: XCTestCase {
     
-    func expect(
-        _ sut: FeedStore,
-        toRetrieve expectedResult: RetrieveCachedFeedResult,
+    func expect<T: FeedStore>(
+        _ sut: T,
+        toRetrieve expectedResult: T.RetrievalResult,
         file: StaticString = #file,
         line: UInt = #line
     ) {
         let expectation = expectation(description: "Wait for cache Retrieval")
         
         sut.retrieve { retrievedResult in
+            
             switch (expectedResult, retrievedResult) {
-            case (.empty, .empty),
-                (.failure, .failure):
+            case let (.success(expectedfeed), .success(retrievedFeed)):
+                XCTAssertEqual(expectedfeed, retrievedFeed)
+            case (.failure, .failure):
                 break
-            case let (.found(expectedFeed, expectedTimestamp), .found(retrievedFeed, retrievedTimestamp)):
-                XCTAssertEqual(expectedFeed, retrievedFeed, file: file, line: line)
-                XCTAssertEqual(expectedTimestamp, retrievedTimestamp, file: file, line: line)
             default:
-                XCTFail("Expected to retrieve \(expectedResult), got \(retrievedResult) instead", file: file, line: line)
+                XCTFail("Expected to retrieve \(expectedResult), got \(retrievedResult) instead")
             }
             expectation.fulfill()
         }
@@ -30,7 +29,7 @@ extension FeedStoreSpecs where Self: XCTestCase {
     
     func expect(
         _ sut: FeedStore,
-        toRetrieve expectedResult: RetrieveCachedFeedResult,
+        toRetrieve expectedResult: FeedStore.RetrievalResult,
         times: UInt,
         file: StaticString = #file,
         line: UInt = #line

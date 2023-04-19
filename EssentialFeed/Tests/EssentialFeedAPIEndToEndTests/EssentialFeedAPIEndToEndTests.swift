@@ -84,7 +84,7 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
         return URL(string: "https://url-\(index+1).com")!
     }
     
-    func getFeedResult(file: StaticString = #file, line: UInt = #line) -> LoadFeedResult? {
+    func getFeedResult(file: StaticString = #file, line: UInt = #line) -> FeedLoader.Result? {
         
         
         let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
@@ -92,7 +92,7 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
         let loader = createAndTrackMemoryLeaks(RemoteFeedLoader(url: testServerURL, client: client), file: file, line: line)
         let expectation = expectation(description: #function)
         
-        var receivedResult: LoadFeedResult?
+        var receivedResult: FeedLoader.Result?
         loader.load { result in
             receivedResult = result
             expectation.fulfill()
