@@ -14,7 +14,7 @@ public class URLSessionHttpClient: HttpClient {
         self.session = session
     }
     
-    public func get(from url: URL, completion: @escaping (HttpClientResult) -> Void) {
+    public func get(from url: URL, completion: @escaping (HttpClient.Result) -> Void) {
         session.dataTask(with: url, completionHandler: { data, response, error in
             if let error {
                 completion(.failure(error))

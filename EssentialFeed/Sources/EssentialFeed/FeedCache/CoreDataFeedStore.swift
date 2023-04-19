@@ -32,6 +32,7 @@ public class CoreDataFeedStore: FeedStore {
                 try context.save()
                 completion(nil)
             } catch {
+                context.reset()
                 completion(error)
             }
         }
@@ -46,15 +47,16 @@ public class CoreDataFeedStore: FeedStore {
                     completion(.empty)
                 }
             } catch {
+                context.reset()
                 completion(.failure(error))
             }
         }
     }
 
     private func perform(_ action: @escaping (NSManagedObjectContext) -> Void) {
-            let context = self.context
-            context.perform { action(context) }
-        }
+        let context = self.context
+        context.perform { action(context) }
+    }
 }
 
 @objc(ManagedCache)

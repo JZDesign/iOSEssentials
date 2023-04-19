@@ -28,7 +28,7 @@ public final class RemoteFeedLoader: FeedLoader {
         }
     }
     
-    private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
+    private static func map(_ data: Data, from response: HTTPURLResponse) -> RemoteFeedLoader.Result {
         do {
             let models = try decodeResponse(data, from: response).map(\.feedItem)
             return .success(models)
@@ -58,8 +58,6 @@ public final class RemoteFeedLoader: FeedLoader {
         case connectivity
         case invalidData
     }
-    
-    public typealias Result = LoadFeedResult
 }
 
 struct RemoteFeedItem: Decodable {
