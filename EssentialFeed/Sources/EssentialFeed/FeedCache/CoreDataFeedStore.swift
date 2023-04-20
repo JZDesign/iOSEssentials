@@ -11,15 +11,12 @@ public class CoreDataFeedStore: FeedStore {
 
     public func deleteCachedFeed(completion: @escaping DeletionCompletion) {
         perform { context in
-            do {
+            completion(Result {
                 try ManagedCache
                     .find(in: context)
                     .map(context.delete)
                     .map(context.save)
-                completion(.success(()))
-            } catch {
-                completion(.failure(error))
-            }
+            })
         }
     }
     
@@ -40,16 +37,11 @@ public class CoreDataFeedStore: FeedStore {
     
     public func retrieve(completion: @escaping RetrievalCompletion) {
         perform { context in
-            do {
-                if let cache = try ManagedCache.find(in: context) {
-                    completion(.success(CachedFeed(feed: cache.localFeed, timeStamp: cache.timestamp)))
-                } else {
-                    completion(.success(nil))
+            completion(Result {
+                try ManagedCache.find(in: context).map {
+                    CachedFeed(feed: $0.localFeed, timeStamp: $0.timestamp)
                 }
-            } catch {
-                context.reset()
-                completion(.failure(error))
-            }
+            })
         }
     }
 
