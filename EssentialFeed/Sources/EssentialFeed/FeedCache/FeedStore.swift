@@ -1,8 +1,8 @@
 import Foundation
 
 public protocol FeedStore {
-    typealias DeletionCompletion = (Error?) -> Void
-    typealias InsertionCompletion = (Error?) -> Void
+    typealias DeletionCompletion = (Swift.Result<Void, Error>) -> Void
+    typealias InsertionCompletion = (Swift.Result<Void, Error>) -> Void
     typealias RetrievalCompletion = (RetrievalResult) -> Void
     typealias RetrievalResult = Swift.Result<CachedFeed?, Error>
     

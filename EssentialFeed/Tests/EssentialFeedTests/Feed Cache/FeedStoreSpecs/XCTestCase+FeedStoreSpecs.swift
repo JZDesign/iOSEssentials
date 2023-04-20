@@ -48,8 +48,10 @@ extension FeedStoreSpecs where Self: XCTestCase {
     ) -> Error? {
         let expectation = expectation(description: "Wait for insert")
         var result: Error?
-        sut.insert(cache.feed, timeStamp: cache.timeStamp) { error in
-            result = error
+        sut.insert(cache.feed, timeStamp: cache.timeStamp) { insertResult in
+            if case let .failure(error) = insertResult {
+                result = error
+            }
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 1.5)
@@ -65,8 +67,10 @@ extension FeedStoreSpecs where Self: XCTestCase {
     ) -> Error? {
         let expectation = expectation(description: "Wait for insert")
         var result: Error?
-        sut.deleteCachedFeed { error in
-            result = error
+        sut.deleteCachedFeed { deletionResult in
+            if case let .failure(error) = deletionResult {
+                result = error
+            }
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 2.5)

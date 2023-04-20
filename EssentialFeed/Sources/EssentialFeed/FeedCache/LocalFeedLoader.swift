@@ -33,10 +33,10 @@ public extension LocalFeedLoader {
     typealias SaveResult = Error?
 
     func save(_ items: [FeedImage], completion: @escaping (SaveResult) -> Void) {
-        store.deleteCachedFeed { [weak self] error in
+        store.deleteCachedFeed { [weak self] deleteResult in
             guard let self else { return }
 
-            if let cacheDeletionError = error{
+            if case let .failure(cacheDeletionError) = deleteResult {
                 completion(cacheDeletionError)
             } else {
                 self.cache(items, with: completion)
@@ -70,10 +70,13 @@ public extension LocalFeedLoader {
 
 private extension LocalFeedLoader {
     func cache(_ items: [FeedImage], with completion: @escaping (Error?) -> Void) {
-        store.insert(items.toLocal(), timeStamp: currentDate()) { [weak self] error in
+        store.insert(items.toLocal(), timeStamp: currentDate()) { [weak self] result in
             guard self != nil else { return }
-            
-            completion(error)
+            if case let .failure(error) = result {
+                completion(error)
+            } else {
+                completion(nil)
+            }
         }
     }
 }
