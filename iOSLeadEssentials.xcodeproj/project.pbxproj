@@ -18,6 +18,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		42187B5229F2AC2F0070C9B5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 42187B4D29F2AC2E0070C9B5 /* EssentialFeediOS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 42187B3529F2AC2E0070C9B5;
+			remoteInfo = EssentialFeediOS;
+		};
+		42187B5429F2AC2F0070C9B5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 42187B4D29F2AC2E0070C9B5 /* EssentialFeediOS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 42187B3D29F2AC2E0070C9B5;
+			remoteInfo = EssentialFeediOSTests;
+		};
 		42E17B9C29D65B5B00695C16 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 42E17B8329D65B5900695C16 /* Project object */;
@@ -35,6 +49,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		42187B4D29F2AC2E0070C9B5 /* EssentialFeediOS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = EssentialFeediOS.xcodeproj; path = EssentialFeediOS/EssentialFeediOS.xcodeproj; sourceTree = "<group>"; };
 		42E17B8B29D65B5900695C16 /* iOSLeadEssentials.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOSLeadEssentials.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		42E17B8E29D65B5900695C16 /* iOSLeadEssentialsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSLeadEssentialsApp.swift; sourceTree = "<group>"; };
 		42E17B9029D65B5900695C16 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -74,9 +89,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		42187B4E29F2AC2E0070C9B5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				42187B5329F2AC2F0070C9B5 /* EssentialFeediOS.framework */,
+				42187B5529F2AC2F0070C9B5 /* EssentialFeediOSTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		42E17B8229D65B5900695C16 = {
 			isa = PBXGroup;
 			children = (
+				42187B4D29F2AC2E0070C9B5 /* EssentialFeediOS.xcodeproj */,
 				42E17BB829D65BF700695C16 /* Packages */,
 				42E17B8D29D65B5900695C16 /* iOSLeadEssentials */,
 				42E17B9E29D65B5B00695C16 /* iOSLeadEssentialsTests */,
@@ -240,6 +265,12 @@
 			mainGroup = 42E17B8229D65B5900695C16;
 			productRefGroup = 42E17B8C29D65B5900695C16 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 42187B4E29F2AC2E0070C9B5 /* Products */;
+					ProjectRef = 42187B4D29F2AC2E0070C9B5 /* EssentialFeediOS.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				42E17B8A29D65B5900695C16 /* iOSLeadEssentials */,
@@ -248,6 +279,23 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		42187B5329F2AC2F0070C9B5 /* EssentialFeediOS.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = EssentialFeediOS.framework;
+			remoteRef = 42187B5229F2AC2F0070C9B5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		42187B5529F2AC2F0070C9B5 /* EssentialFeediOSTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = EssentialFeediOSTests.xctest;
+			remoteRef = 42187B5429F2AC2F0070C9B5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		42E17B8929D65B5900695C16 /* Resources */ = {
