@@ -14,7 +14,6 @@
 		42E17BA029D65B5B00695C16 /* iOSLeadEssentialsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42E17B9F29D65B5B00695C16 /* iOSLeadEssentialsTests.swift */; };
 		42E17BAA29D65B5B00695C16 /* iOSLeadEssentialsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42E17BA929D65B5B00695C16 /* iOSLeadEssentialsUITests.swift */; };
 		42E17BAC29D65B5B00695C16 /* iOSLeadEssentialsUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42E17BAB29D65B5B00695C16 /* iOSLeadEssentialsUITestsLaunchTests.swift */; };
-		42E17BBC29D65C0500695C16 /* EssentialFeed in Frameworks */ = {isa = PBXBuildFile; productRef = 42E17BBB29D65C0500695C16 /* EssentialFeed */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,7 +67,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				42E17BBC29D65C0500695C16 /* EssentialFeed in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -189,7 +187,6 @@
 			);
 			name = iOSLeadEssentials;
 			packageProductDependencies = (
-				42E17BBB29D65C0500695C16 /* EssentialFeed */,
 			);
 			productName = iOSLeadEssentials;
 			productReference = 42E17B8B29D65B5900695C16 /* iOSLeadEssentials.app */;
@@ -654,13 +651,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		42E17BBB29D65C0500695C16 /* EssentialFeed */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = EssentialFeed;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 42E17B8329D65B5900695C16 /* Project object */;
 }
