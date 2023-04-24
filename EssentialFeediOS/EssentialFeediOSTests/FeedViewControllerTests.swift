@@ -7,22 +7,12 @@ import EssentialFeedAPITestUtilities
 
 final class FeedViewControllerTests: XCTestCase {
     
-    func test_init_doesNotLoadFeed() {
-        let (_, loader) = makeSUT()
+    func test_loadFeedActions_requestsTheFeedFromTheLoader() {
+        let (sut, loader) = makeSUT()
         XCTAssertEqual(loader.loadCallCount, 0)
-    }
-    
-    func test_viewDidLoad_loadsFeed() {
-        let (sut, loader) = makeSUT()
-        
+   
         sut.loadViewIfNeeded()
-        
         XCTAssertEqual(loader.loadCallCount, 1)
-    }
-    
-    func test_userInitiatedFeedReload_loadsFeed() {
-        let (sut, loader) = makeSUT()
-        sut.loadViewIfNeeded()
         
         sut.simulateUserInitiatedFeedReload()
         XCTAssertEqual(loader.loadCallCount, 2)
@@ -31,34 +21,17 @@ final class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.loadCallCount, 3)
     }
 
-    func test_viewDidLoad_showsLoadingIndicator() {
-        let (sut, _) = makeSUT()
+    func test_loadFeedActions_correctlyDisplaysAndHidesTheLoadingIndicator() {
+        let (sut, loader) = makeSUT()
         sut.loadViewIfNeeded()
         XCTAssertTrue(sut.isShowingLoadingIndicator)
-    }
 
-    func test_viewDidLoad_hidesLoadingIndicatorOnLoaderCompletion() {
-        let (sut, loader) = makeSUT()
-        sut.loadViewIfNeeded()
-        loader.completeFeedLoading()
+        loader.completeFeedLoading(at: 0)
         XCTAssertFalse(sut.isShowingLoadingIndicator)
-    }
-    
-    func test_userInitiatedFeedReload_showsLoadingIndicator() {
-        let (sut, loader) = makeSUT()
-        sut.loadViewIfNeeded()
-        loader.completeFeedLoading()
         
         sut.simulateUserInitiatedFeedReload()
         XCTAssertTrue(sut.isShowingLoadingIndicator)
-    }
-    
-    func test_userInitiatedFeedReload_hidesLoadingIndicatorOnLoaderCompletion() {
-        let (sut, loader) = makeSUT()
-        sut.loadViewIfNeeded()
-        loader.completeFeedLoading()
-        
-        sut.simulateUserInitiatedFeedReload()
+
         loader.completeFeedLoading(at: 1)
 
         XCTAssertFalse(sut.isShowingLoadingIndicator)
