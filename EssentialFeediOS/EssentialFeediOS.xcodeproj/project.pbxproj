@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4211C80F29F619A100B318AD /* EssentialFeed in Frameworks */ = {isa = PBXBuildFile; productRef = 4211C80E29F619A100B318AD /* EssentialFeed */; };
 		4211C81129F619A900B318AD /* EssentialFeedAPITestUtilities in Frameworks */ = {isa = PBXBuildFile; productRef = 4211C81029F619A900B318AD /* EssentialFeedAPITestUtilities */; };
+		4211C81329F6222600B318AD /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4211C81229F6222600B318AD /* FeedViewController.swift */; };
 		42187B3E29F2AC2E0070C9B5 /* EssentialFeediOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42187B3529F2AC2E0070C9B5 /* EssentialFeediOS.framework */; };
 		42187B4329F2AC2E0070C9B5 /* FeedViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42187B4229F2AC2E0070C9B5 /* FeedViewControllerTests.swift */; };
 		42187B4429F2AC2E0070C9B5 /* EssentialFeediOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 42187B3829F2AC2E0070C9B5 /* EssentialFeediOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -26,6 +27,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4211C81229F6222600B318AD /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		42187B3529F2AC2E0070C9B5 /* EssentialFeediOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialFeediOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		42187B3829F2AC2E0070C9B5 /* EssentialFeediOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EssentialFeediOS.h; sourceTree = "<group>"; };
 		42187B3D29F2AC2E0070C9B5 /* EssentialFeediOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeediOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -87,6 +89,7 @@
 			children = (
 				42187B3829F2AC2E0070C9B5 /* EssentialFeediOS.h */,
 				42187B5B29F6136C0070C9B5 /* Requirements.md */,
+				4211C81229F6222600B318AD /* FeedViewController.swift */,
 			);
 			path = EssentialFeediOS;
 			sourceTree = "<group>";
@@ -175,6 +178,7 @@
 				TargetAttributes = {
 					42187B3429F2AC2E0070C9B5 = {
 						CreatedOnToolsVersion = 14.2;
+						LastSwiftMigration = 1420;
 					};
 					42187B3C29F2AC2E0070C9B5 = {
 						CreatedOnToolsVersion = 14.2;
@@ -223,6 +227,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4211C81329F6222600B318AD /* FeedViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -368,6 +373,7 @@
 		42187B4829F2AC2E0070C9B5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -388,6 +394,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -396,6 +403,7 @@
 		42187B4929F2AC2E0070C9B5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -424,6 +432,7 @@
 		42187B4B29F2AC2E0070C9B5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5X48PFL69D;
@@ -440,6 +449,7 @@
 		42187B4C29F2AC2E0070C9B5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5X48PFL69D;
