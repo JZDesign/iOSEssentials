@@ -36,6 +36,33 @@ final class FeedViewControllerTests: XCTestCase {
         sut.loadViewIfNeeded()
         XCTAssertTrue(sut.refreshControl!.isRefreshing)
     }
+
+    func test_viewDidLoad_hidesLoadingIndicatorOnLoaderCompletion() {
+        let (sut, loader) = makeSUT()
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoading()
+        XCTAssertFalse(sut.refreshControl!.isRefreshing)
+    }
+    
+    func test_pullToRefresh_showsLoadingIndicator() {
+        let (sut, loader) = makeSUT()
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoading()
+        
+        sut.refreshControl?.simulatePullToRefresh()
+        XCTAssertTrue(sut.refreshControl!.isRefreshing)
+    }
+    
+    func test_pullToRefresh_hidesLoadingIndicatorOnLoaderCompletion() {
+        let (sut, loader) = makeSUT()
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoading()
+        
+        sut.refreshControl?.simulatePullToRefresh()
+        loader.completeFeedLoading(at: 1)
+
+        XCTAssertFalse(sut.refreshControl!.isRefreshing)
+    }
     
     // MARK: - Helpers
     
@@ -46,11 +73,20 @@ final class FeedViewControllerTests: XCTestCase {
     }
     
     class LoaderSpy: FeedLoader {
+        var loadCallCount: Int {
+            completions.count
+        }
+    
+        private(set) var completions = [(FeedLoader.Result) -> Void]()
+
         func load(completion: @escaping (Result<[EssentialFeed.FeedImage], Error>) -> Void) {
-            loadCallCount += 1
+            completions.append(completion)
         }
         
-        private(set) var loadCallCount = 0
+        func completeFeedLoading(at index: Int = 0) {
+            completions[index](.success([]))
+        }
+        
     }
 }
 
@@ -76,11 +112,13 @@ final class FeedViewController: UITableViewController {
     private func setupRefreshControl() {
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
-        refreshControl?.beginRefreshing()
     }
     
     @objc private func load() {
-        loader?.load { _ in }
+        refreshControl?.beginRefreshing()
+        loader?.load { [refreshControl] _ in
+            refreshControl?.endRefreshing()
+        }
     }
 }
 
