@@ -4,6 +4,7 @@ import EssentialFeed
 
 public final class FeedViewController: UITableViewController {
     var loader: FeedLoader? = nil
+    private var tableModel = [FeedImage]()
     
     public init(loader: FeedLoader) {
         self.loader = loader
@@ -27,8 +28,31 @@ public final class FeedViewController: UITableViewController {
     
     @objc private func load() {
         refreshControl?.beginRefreshing()
-        loader?.load { [refreshControl] _ in
-            refreshControl?.endRefreshing()
+        loader?.load { [weak self] result in
+            switch result {
+            case .success(let images):
+                self?.tableModel = images
+            case .failure(let error):
+                print(error)
+                // TODO: Fix this ^^
+            }
+            self?.tableView.reloadData()
+            self?.refreshControl?.endRefreshing()
         }
+    }
+    
+    // MARK: - Table View
+    
+    public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        tableModel.count
+    }
+    
+    public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let model = tableModel[indexPath.row]
+        let cell = FeedImageCell()
+        cell.locationContainer.isHidden = (model.location == nil)
+        cell.locationLabel.text = model.location
+        cell.descriptionLabel.text = model.description
+        return cell
     }
 }
