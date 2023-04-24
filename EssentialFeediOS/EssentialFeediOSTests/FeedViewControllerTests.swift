@@ -10,7 +10,7 @@ final class FeedViewControllerTests: XCTestCase {
     func test_loadFeedActions_requestsTheFeedFromTheLoader() {
         let (sut, loader) = makeSUT()
         XCTAssertEqual(loader.loadCallCount, 0, "Expecting no load request on initialization")
-   
+        
         sut.loadViewIfNeeded()
         XCTAssertEqual(loader.loadCallCount, 1, "Expecting the first load event on viewDidLoad")
         
@@ -20,21 +20,21 @@ final class FeedViewControllerTests: XCTestCase {
         sut.simulateUserInitiatedFeedReload()
         XCTAssertEqual(loader.loadCallCount, 3, "Expecting another load event when a user triggers a refresh")
     }
-
+    
     func test_loadingFeedIndicator_isVisibleWhileLoadingFeed() {
         let (sut, loader) = makeSUT()
         sut.loadViewIfNeeded()
         XCTAssertTrue(sut.isShowingLoadingIndicator, "Expecting a loading indicator to appear when viewDidLoad gets invoked")
-
+        
         loader.completeFeedLoading(at: 0)
-        XCTAssertFalse(sut.isShowingLoadingIndicator, "Expecting a loading indicator to disappear when the load job is complete")
+        XCTAssertFalse(sut.isShowingLoadingIndicator, "Expecting a loading indicator to disappear when the load job is completes successfully")
         
         sut.simulateUserInitiatedFeedReload()
         XCTAssertTrue(sut.isShowingLoadingIndicator, "Expecting a loading indicator to appear when a manual refresh occurs")
-
-        loader.completeFeedLoading(at: 1)
-
-        XCTAssertFalse(sut.isShowingLoadingIndicator, "Expecting a loading indicator to disappear when the load job is complete")
+        
+        loader.completeFeedLoading(with: anyNSError(), at: 1)
+        
+        XCTAssertFalse(sut.isShowingLoadingIndicator, "Expecting a loading indicator to disappear when the load job is complete, even if it's an error")
     }
     
     func test_loadFeedCompletion_rendersSuccessfullyLoadedFeed() {
