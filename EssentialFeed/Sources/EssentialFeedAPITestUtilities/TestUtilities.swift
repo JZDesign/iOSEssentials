@@ -19,8 +19,8 @@ public extension XCTestCase {
         FeedImage(id: UUID(), description: "any", location: "any", url: anyURL())
     }
     
-    func makeImage(description: String?, location: String?) -> FeedImage {
-        FeedImage(id: UUID(), description: description, location: location, url: anyURL())
+    func makeImage(description: String?, location: String?, url: URL = anyURL()) -> FeedImage {
+        FeedImage(id: UUID(), description: description, location: location, url: url)
     }
     
     func uniqueImageFeed() -> (models: [FeedImage], local: [LocalFeedImage]) {
