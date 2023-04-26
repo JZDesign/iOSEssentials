@@ -1,6 +1,7 @@
 import UIKit
 
 public final class FeedImageCell: UITableViewCell {
+    public let feedImageRetryButton = UIButton()
     public let feedImageContainer = UIView()
     public let feedImageView = UIImageView()
     public let locationContainer = UIView()
