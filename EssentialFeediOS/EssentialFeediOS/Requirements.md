@@ -6,7 +6,7 @@
 [x] Render all loaded feed items (location, image, description)
 [ ] Image Loading Experience:
     [x] Load when image view is visible (on screen)
-    [ ] Cancel when the image is out of the screen
+    [x] Cancel when the image is out of the screen
     [ ] Show a loading indicator while loading image (shimmer)
     [ ] Option to retry on image download error
     [ ] Preload image when the view is near visible
