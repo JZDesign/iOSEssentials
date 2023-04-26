@@ -3,9 +3,9 @@
 [x] Load Feed Automatically when the view is presented
 [x] Allow a customer to manually reload feed (pull to refresh)
 [x] show a loading indicator while loading the feed
-[ ] Render all loaded feed items (location, image, description)
+[x] Render all loaded feed items (location, image, description)
 [ ] Image Loading Experience:
-    [ ] Load when image view is visible (on screen)
+    [x] Load when image view is visible (on screen)
     [ ] Cancel when the image is out of the screen
     [ ] Show a loading indicator while loading image (shimmer)
     [ ] Option to retry on image download error
