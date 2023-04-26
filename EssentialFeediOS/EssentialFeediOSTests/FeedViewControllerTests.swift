@@ -198,6 +198,31 @@ final class FeedViewControllerTests: XCTestCase {
         XCTAssertFalse(images[0]!.isShowingRetryAction, "Expected no image download retry button for second view when loading is complete")
     }
     
+    func test_feedImageViewRetryButton_triggersReloadWhenPressed() {
+        let image0 = makeImage(description: "0", location: nil, url: URL(string: "http://url-0.com")!)
+        let image1 = makeImage(description: "1", location: nil, url: URL(string: "http://url-1.com")!)
+        
+        let (sut, loader) = makeSUT()
+        
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoading(with: [image0, image1])
+
+        let view0 = sut.simulateFeedImageViewVisible(at: 0)!
+        let view1 = sut.simulateFeedImageViewVisible(at: 1)!
+        
+        XCTAssertEqual(loader.loadedImageURLs, [image0.url, image1.url], "Expect 2 initial url requests")
+        
+        loader.completeImageLoadingWithError(at: 0)
+        loader.completeImageLoadingWithError(at: 1)
+        XCTAssertEqual(loader.loadedImageURLs, [image0.url, image1.url], "Expect the same 2 url requests before retry (no more have ocurred")
+        
+        view0.simulateRetryAction()
+        XCTAssertEqual(loader.loadedImageURLs, [image0.url, image1.url, image0.url], "Expect the same 2 url requests before retry (no more have ocurred")
+
+        view1.simulateRetryAction()
+        XCTAssertEqual(loader.loadedImageURLs, [image0.url, image1.url, image0.url, image1.url], "Expect the same 2 url requests before retry (no more have ocurred")
+    }
+    
     // MARK: - Helpers
 
     func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
@@ -312,13 +337,25 @@ extension FeedViewController {
     }
 }
 
-extension UIRefreshControl {
-    func simulatePullToRefresh() {
+extension UIControl {
+    func simulate(action: UIControl.Event) {
         allTargets.forEach({ target in
-            actions(forTarget: target, forControlEvent: .valueChanged)?.forEach({
+            actions(forTarget: target, forControlEvent: action)?.forEach({
                 (target as NSObject).perform(Selector($0))
             })
         })
+    }
+}
+
+extension UIRefreshControl {
+    func simulatePullToRefresh() {
+        simulate(action: .valueChanged)
+    }
+}
+
+extension UIButton {
+    func simulateTap() {
+        simulate(action: .touchUpInside)
     }
 }
 
@@ -345,6 +382,10 @@ extension FeedImageCell {
 
     var isShowingRetryAction: Bool {
         !feedImageRetryButton.isHidden
+    }
+    
+    func simulateRetryAction() {
+        feedImageRetryButton.simulateTap()
     }
 }
 

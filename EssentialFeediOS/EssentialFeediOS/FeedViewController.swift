@@ -69,18 +69,25 @@ public final class FeedViewController: UITableViewController {
         cell.feedImageView.image = nil // ALWAYS set to nil before loading to prevent issues with reusing cells
         cell.feedImageRetryButton.isHidden = true
         cell.feedImageContainer.startShimmering()
-        tasks[indexPath] = imageLoader?.loadImageData(from: model.url) { [cell] result in
-            switch result {
-            case let .success(data):
-                guard let image = UIImage(data: data) else {
-                    fallthrough
+        let loadImage = { [weak self, weak cell] in
+            guard let self = self else { return }
+            
+            self.tasks[indexPath] = self.imageLoader?.loadImageData(from: model.url) { [weak cell] result in
+                guard let cell = cell else { return }
+                switch result {
+                case let .success(data):
+                    guard let image = UIImage(data: data) else {
+                        fallthrough
+                    }
+                    cell.feedImageView.image = image
+                case .failure:
+                    cell.feedImageRetryButton.isHidden = false
                 }
-                cell.feedImageView.image = image
-            case .failure:
-                cell.feedImageRetryButton.isHidden = false
+                cell.feedImageContainer.stopShimmering()
             }
-            cell.feedImageContainer.stopShimmering()
         }
+        cell.onRetry = loadImage
+        loadImage()
         return cell
     }
     
