@@ -7,6 +7,6 @@
 [ ] Image Loading Experience:
     [x] Load when image view is visible (on screen)
     [x] Cancel when the image is out of the screen
-    [ ] Show a loading indicator while loading image (shimmer)
+    [x] Show a loading indicator while loading image (shimmer)
     [ ] Option to retry on image download error
     [ ] Preload image when the view is near visible

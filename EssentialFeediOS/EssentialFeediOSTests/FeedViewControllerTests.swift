@@ -95,10 +95,7 @@ final class FeedViewControllerTests: XCTestCase {
             sut.simulateFeedImageViewVisible(at: 1),
         ]
                 
-        sut.simulateFeedImageViewVisible(at: 0)
         XCTAssertTrue(images[0]!.isShowingImageLoadingIndicator, "Expected first loading indicator to display once the first url load was invoked")
-
-        sut.simulateFeedImageViewVisible(at: 1)
         XCTAssertTrue(images[1]!.isShowingImageLoadingIndicator, "Expected all loading indicators to be displayed once the all of the url loads were invoked")
         
         loader.completeImageLoading(at: 0)
@@ -125,6 +122,31 @@ final class FeedViewControllerTests: XCTestCase {
 
         sut.simulateFeedImageViewNotVisible(at: 1)
         XCTAssertEqual(loader.cancelledImageURLs, images.map(\.url), "Expected all image URLs to be requested once the views became visible")
+    }
+    
+    func test_feedImageView_rendersImageLoadedFromURL() {
+        let (sut, loader) = makeSUT()
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoading(with: uniqueImageFeed().models)
+
+        let images = [
+            sut.simulateFeedImageViewVisible(at: 0),
+            sut.simulateFeedImageViewVisible(at: 1),
+        ]
+        
+        let imageData1 = UIImage.make(withColor: .systemPink).pngData()!
+        let imageData2 = UIImage.make(withColor: .systemBlue).pngData()!
+                
+        XCTAssertEqual(images[0]!.renderedImage, .none, "Expected no image for first view while loading first image")
+        XCTAssertEqual(images[1]!.renderedImage, .none, "Expected no image for second view while loading second image")
+        
+        loader.completeImageLoading(with: imageData1, at: 0)
+        XCTAssertEqual(images[0]!.renderedImage, imageData1, "Expected image for first view")
+        XCTAssertEqual(images[1]!.renderedImage, .none, "Expected no image for second view while loading second image and first image completed loading")
+        
+        loader.completeImageLoading(with: imageData2, at: 1)
+        XCTAssertEqual(images[0]!.renderedImage, imageData1, "Expected image for first view")
+        XCTAssertEqual(images[1]!.renderedImage, imageData2, "Expected image for second view")
     }
     
     // MARK: - Helpers
@@ -253,7 +275,7 @@ extension UIRefreshControl {
 
 extension FeedImageCell {
     var isShowingImageLoadingIndicator: Bool {
-        imageContainer.isShimmering
+        feedImageContainer.isShimmering
     }
 
     var isShowingLocation: Bool {
@@ -266,5 +288,22 @@ extension FeedImageCell {
     
     var descriptionText: String? {
         descriptionLabel.text
+    }
+    
+    var renderedImage: Data? {
+        feedImageView.image?.pngData()
+    }
+}
+
+extension UIImage {
+    static func make(withColor color: UIColor) -> UIImage {
+        let rect = CGRect(x: 0, y: 0, width: 1, height: 1)
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        
+        return UIGraphicsImageRenderer(size: rect.size, format: format).image {
+            color.setFill()
+            $0.fill(rect)
+        }
     }
 }

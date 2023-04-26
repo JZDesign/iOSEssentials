@@ -65,15 +65,22 @@ public final class FeedViewController: UITableViewController {
         cell.locationContainer.isHidden = (model.location == nil)
         cell.locationLabel.text = model.location
         cell.descriptionLabel.text = model.description
-        cell.imageContainer.startShimmering()
+
+        cell.feedImageView.image = nil // ALWAYS set to nil before loading to prevent issues with reusing cells
+        cell.feedImageContainer.startShimmering()
         tasks[indexPath] = imageLoader?.loadImageData(from: model.url) { [cell] result in
-            cell.imageContainer.stopShimmering()
-        } // TODO: Actually display image…
+            switch result {
+            case let .success(data):
+                cell.feedImageView.image = UIImage(data: data)
+            case let .failure(error):
+                print(error)
+            }
+            cell.feedImageContainer.stopShimmering()
+        }
         return cell
     }
     
     public override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let model = tableModel[indexPath.row]
         tasks[indexPath]?.cancel()
         tasks[indexPath] = nil
     }
