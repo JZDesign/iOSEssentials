@@ -85,6 +85,30 @@ final class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.loadedImageURLs, images.map(\.url), "Expected all image URLs to be requested once the views became visible")
     }
 
+    func test_feedImageViewLoadingIndicator_isVisibleWhenLoadingImage() {
+        let (sut, loader) = makeSUT()
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoading(with: uniqueImageFeed().models)
+
+        let images = [
+            sut.simulateFeedImageViewVisible(at: 0),
+            sut.simulateFeedImageViewVisible(at: 1),
+        ]
+                
+        sut.simulateFeedImageViewVisible(at: 0)
+        XCTAssertTrue(images[0]!.isShowingImageLoadingIndicator, "Expected first loading indicator to display once the first url load was invoked")
+
+        sut.simulateFeedImageViewVisible(at: 1)
+        XCTAssertTrue(images[1]!.isShowingImageLoadingIndicator, "Expected all loading indicators to be displayed once the all of the url loads were invoked")
+        
+        loader.completeImageLoading(at: 0)
+        XCTAssertFalse(images[0]!.isShowingImageLoadingIndicator, "Expected first loading indicator to no longer be displayed when the first url load finished")
+        XCTAssertTrue(images[1]!.isShowingImageLoadingIndicator, "Expected the second loading indicator to still be displayed after the first view's url finsihed loading")
+
+        loader.completeImageLoadingWithError(at: 1)
+        XCTAssertFalse(images[1]!.isShowingImageLoadingIndicator, "Expected no loading indicator on the view if the url load returned an error")
+    }
+    
     func test_feedImageView_cancelsImageURLLoadingWhenViewIsNoLongerVisible() {
         let images = [
             makeImage(description: "a description", location: "a location", url: URL(string: "http://url-0.com")!),
@@ -102,7 +126,6 @@ final class FeedViewControllerTests: XCTestCase {
         sut.simulateFeedImageViewNotVisible(at: 1)
         XCTAssertEqual(loader.cancelledImageURLs, images.map(\.url), "Expected all image URLs to be requested once the views became visible")
     }
-    
     
     // MARK: - Helpers
 
@@ -133,9 +156,12 @@ final class FeedViewControllerTests: XCTestCase {
     class LoaderSpy: FeedLoader, FeedImageDataLoader {
         var loadFeedRequestCallCount: Int { feedRequests.count }
 
-        private(set) var loadedImageURLs: [URL] = []
         private(set) var cancelledImageURLs: [URL] = []
         private(set) var feedRequests = [(FeedLoader.Result) -> Void]()
+        private(set) var imageRequests = [(url: URL, completion: (FeedImageDataLoader.Result) -> Void)]()
+        var loadedImageURLs: [URL] {
+            imageRequests.map(\.url)
+        }
 
         // MARK: - Feed Loader
 
@@ -151,10 +177,18 @@ final class FeedViewControllerTests: XCTestCase {
             feedRequests[index](.failure(error))
         }
         
+        func completeImageLoading(with imageData: Data = Data(), at index: Int = 0) {
+            imageRequests[index].completion(.success(imageData))
+        }
+        
+        func completeImageLoadingWithError(_ error: Error = anyNSError(), at index: Int = 0) {
+            imageRequests[index].completion(.failure(error))
+        }
+        
         // MARK: - Feed Image Data Loader
         
-        func loadImageData(from url: URL) -> FeedImageDataLoaderTask {
-            loadedImageURLs.append(url)
+        func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
+            imageRequests.append((url, completion))
             return TaskSpy { [weak self] in self?.cancelledImageURLs.append(url) }
         }
         
@@ -185,8 +219,9 @@ extension FeedViewController {
         tableView.numberOfRows(inSection: feedImageSection)
     }
     
-    func simulateFeedImageViewVisible(at index: Int) {
-        _ = feedImageView(at: index)
+    @discardableResult
+    func simulateFeedImageViewVisible(at index: Int) -> FeedImageCell? {
+        feedImageView(at: index) as? FeedImageCell
     }
 
     func simulateFeedImageViewNotVisible(at index: Int) {
@@ -217,6 +252,10 @@ extension UIRefreshControl {
 }
 
 extension FeedImageCell {
+    var isShowingImageLoadingIndicator: Bool {
+        imageContainer.isShimmering
+    }
+
     var isShowingLocation: Bool {
         !locationContainer.isHidden
     }
