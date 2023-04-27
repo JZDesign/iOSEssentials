@@ -118,10 +118,10 @@ final class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.loadedImageURLs, [])
         
         sut.simulateFeedImageViewNotVisible(at: 0)
-        XCTAssertEqual(loader.cancelledImageURLs, [images.first!.url], "Expected first image URL request once the first view became visible")
+        XCTAssertEqual(loader.cancelledImageURLs, [images.first!.url])
 
         sut.simulateFeedImageViewNotVisible(at: 1)
-        XCTAssertEqual(loader.cancelledImageURLs, images.map(\.url), "Expected all image URLs to be requested once the views became visible")
+        XCTAssertEqual(loader.cancelledImageURLs, images.map(\.url))
     }
     
     func test_feedImageView_rendersImageLoadedFromURL() {
