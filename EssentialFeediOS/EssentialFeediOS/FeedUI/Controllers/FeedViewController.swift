@@ -2,15 +2,6 @@ import UIKit
 import Foundation
 import EssentialFeed
 
-public protocol FeedImageDataLoaderTask {
-    func cancel()
-}
-
-public protocol FeedImageDataLoader {
-    typealias Result = Swift.Result<Data, Error>
-    func loadImageData(from url: URL, completion: @escaping (Result) -> Void) -> FeedImageDataLoaderTask
-}
-
 public final class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching {
     private var feedLoader: FeedLoader? = nil
     private var imageLoader: FeedImageDataLoader? = nil
@@ -102,7 +93,7 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     public func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
         indexPaths.forEach { index in
             let model = tableModel[index.row]
-            tasks[index] = imageLoader?.loadImageData(from: model.url, completion: { _ in })
+            tasks[index] = imageLoader?.loadImageData(from: model.url, completion: { _ in }) // This assumes that the loader will be able to pick up where it left off… right?
         }
     }
     
