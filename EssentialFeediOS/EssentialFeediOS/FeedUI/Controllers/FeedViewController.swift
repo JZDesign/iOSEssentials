@@ -3,13 +3,19 @@ import Foundation
 import EssentialFeed
 
 public final class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching {
-    private var feedLoader: FeedLoader? = nil
+    private var feedRefreshViewController: FeedRefreshViewController? = nil
     private var imageLoader: FeedImageDataLoader? = nil
-    private var tableModel = [FeedImage]()
+
+    private var tableModel = [FeedImage]() {
+        didSet {
+            tableView.reloadData()
+        }
+    }
+
     private var tasks = [IndexPath: FeedImageDataLoaderTask]()
     
     public init(feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) {
-        self.feedLoader = feedLoader
+        self.feedRefreshViewController = FeedRefreshViewController(feedLoader: feedLoader)
         self.imageLoader = imageLoader
         super.init(style: .plain)
     }
@@ -22,27 +28,14 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
         super.viewDidLoad()
         tableView.prefetchDataSource = self
         setupRefreshControl()
-        load()
     }
     
     private func setupRefreshControl() {
-        refreshControl = UIRefreshControl()
-        refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
-    }
-    
-    @objc private func load() {
-        refreshControl?.beginRefreshing()
-        feedLoader?.load { [weak self] result in
-            switch result {
-            case .success(let images):
-                self?.tableModel = images
-            case .failure(let error):
-                print(error)
-                // TODO: Fix this ^^
-            }
-            self?.tableView.reloadData()
-            self?.refreshControl?.endRefreshing()
+        refreshControl = feedRefreshViewController?.view
+        feedRefreshViewController?.onRefresh = { [weak self] feed in
+            self?.tableModel = feed
         }
+        feedRefreshViewController?.refresh()
     }
     
     // MARK: - Table View
