@@ -263,7 +263,7 @@ final class FeedViewControllerTests: XCTestCase {
 
     func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
         let loader = createAndTrackMemoryLeaks(LoaderSpy(), file: file, line: line)
-        let sut = createAndTrackMemoryLeaks(FeedViewController(feedLoader: loader, imageLoader: loader), file: file, line: line)
+        let sut = createAndTrackMemoryLeaks(FeedUIComposer.feedComposedWith(feedLoader: loader, imageLoader: loader), file: file, line: line)
         return (sut, loader)
     }
     
