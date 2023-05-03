@@ -6,10 +6,11 @@ import EssentialFeed
 public struct FeedUIComposer {
     private init() {}
     public static func feedComposedWith(feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) -> FeedViewController {
-        let feedRefreshViewController = FeedRefreshViewController(feedLoader: feedLoader)
+        let viewModel = FeedViewModel(feedLoader: feedLoader)
+        let feedRefreshViewController = FeedRefreshViewController(viewModel: viewModel)
         let feedViewController = FeedViewController(feedRefreshViewController: feedRefreshViewController)
 
-        feedRefreshViewController.onRefresh = adaptFeedToCellControllers(forwardingTo: feedViewController, loader: imageLoader)
+        viewModel.onFeedLoad = adaptFeedToCellControllers(forwardingTo: feedViewController, loader: imageLoader)
 
         return feedViewController
     }
