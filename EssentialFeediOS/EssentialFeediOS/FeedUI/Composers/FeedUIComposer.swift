@@ -6,7 +6,6 @@ import EssentialFeed
 public struct FeedUIComposer {
     private init() {}
     public static func feedComposedWith(feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) -> FeedViewController {
-        //        let viewModel = FeedViewModel(feedLoader: feedLoader)
         
         let presenter = FeedPresenter(feedLoader: feedLoader)
         let feedRefreshViewController = FeedRefreshViewController(presenter: presenter)
@@ -14,20 +13,10 @@ public struct FeedUIComposer {
 
         presenter.loadingView = WeakReferenceVirtualProxy(object:  feedRefreshViewController)
         presenter.view = FeedViewAdapter(controller: feedViewController, imageLoader: imageLoader)
-        //        viewModel.onFeedLoad = adaptFeedToCellControllers(forwardingTo: feedViewController, loader: imageLoader)
 
         return feedViewController
     }
     
-    // MVVM
-    //    private static func adaptFeedToCellControllers(
-    //        forwardingTo controller: FeedViewController,
-    //        loader: FeedImageDataLoader
-    //    ) -> ([FeedImage]) -> Void {
-    //        { [weak controller] feed in
-    //            controller?.tableModel = feed.map { FeedImageCellController(model: $0, imageLoader: loader) }
-    //        }
-    //    }
 }
 
 // MVP
