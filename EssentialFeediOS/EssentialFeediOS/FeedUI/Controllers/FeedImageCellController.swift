@@ -1,6 +1,8 @@
 import UIKit
 import EssentialFeed
 
+
+// TODO: - Extract state management into a view model that does not know anything about UIKit. (hint, use generic closures to let the platform pass in the way to take data and turn it into the image it cares about)
 public final class FeedImageCellController {
     private var task: FeedImageDataLoaderTask?
     private let model: FeedImage
