@@ -8,7 +8,7 @@ public struct FeedUIComposer {
     public static func feedComposedWith(feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) -> FeedViewController {
         
         let presenter = FeedPresenter(feedLoader: feedLoader)
-        let feedRefreshViewController = FeedRefreshViewController(presenter: presenter)
+        let feedRefreshViewController = FeedRefreshViewController(loadFeed: presenter.loadFeed)
         let feedViewController = FeedViewController(feedRefreshViewController: feedRefreshViewController)
 
         presenter.loadingView = WeakReferenceVirtualProxy(object:  feedRefreshViewController)
