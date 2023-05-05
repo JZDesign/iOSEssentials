@@ -26,27 +26,21 @@ public protocol FeedView {
 }
 
 final class FeedPresenter {
-    typealias Observer<T> = (T) -> Void
-    let feedLoader: FeedLoader
-    
-    init(feedLoader: FeedLoader) {
-        self.feedLoader = feedLoader
-    }
-
     var view: FeedView?
     var loadingView: FeedLoadingView?
     
-    func loadFeed() {
+    func didStartLoadingFeed() {
         loadingView?.display(FeedLoadingViewModel(isLoading: true))
-        feedLoader.load { [weak self] result in
-            switch result {
-            case .success(let images):
-                self?.view?.display(FeedViewModel(feed: images))
-            case .failure(let error):
-                print(error)
-                // TODO: Fix this ^^ -- do more than print the error
-            }
-            self?.loadingView?.display(FeedLoadingViewModel(isLoading: false))
-        }
+    }
+    
+    func didFinishLoadingFeed(with error: Error) {
+        loadingView?.display(FeedLoadingViewModel(isLoading: false))
+    }
+    
+    func didFinishLoadingFeed(with feed: [FeedImage]) {
+        loadingView?.display(FeedLoadingViewModel(isLoading: false))
+        view?.display(FeedViewModel(feed: feed))
     }
 }
+
+
