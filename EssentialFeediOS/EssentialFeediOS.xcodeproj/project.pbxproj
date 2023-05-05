@@ -125,19 +125,19 @@
 			path = Composers;
 			sourceTree = "<group>";
 		};
-		4211C8292A027D6F00B318AD /* ViewModels */ = {
+		4211C8292A027D6F00B318AD /* MVVM */ = {
 			isa = PBXGroup;
 			children = (
 				4211C82A2A027D7A00B318AD /* FeedViewModel.swift */,
 			);
-			path = ViewModels;
+			path = MVVM;
 			sourceTree = "<group>";
 		};
 		4211C82C2A051A5100B318AD /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
 				4211C82D2A051A6000B318AD /* Presenters */,
-				4211C8292A027D6F00B318AD /* ViewModels */,
+				4211C8292A027D6F00B318AD /* MVVM */,
 				4211C81E29FA8F3500B318AD /* Controllers */,
 			);
 			path = Presentation;
