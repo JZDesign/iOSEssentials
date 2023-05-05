@@ -6,21 +6,42 @@ import EssentialFeed
 public struct FeedUIComposer {
     private init() {}
     public static func feedComposedWith(feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) -> FeedViewController {
-        let viewModel = FeedViewModel(feedLoader: feedLoader)
-        let feedRefreshViewController = FeedRefreshViewController(viewModel: viewModel)
+        //        let viewModel = FeedViewModel(feedLoader: feedLoader)
+        
+        let presenter = FeedPresenter(feedLoader: feedLoader)
+        let feedRefreshViewController = FeedRefreshViewController(presenter: presenter)
         let feedViewController = FeedViewController(feedRefreshViewController: feedRefreshViewController)
 
-        viewModel.onFeedLoad = adaptFeedToCellControllers(forwardingTo: feedViewController, loader: imageLoader)
+        presenter.loadingView = feedRefreshViewController
+        presenter.view = FeedViewAdapter(controller: feedViewController, imageLoader: imageLoader)
+        //        viewModel.onFeedLoad = adaptFeedToCellControllers(forwardingTo: feedViewController, loader: imageLoader)
 
         return feedViewController
     }
     
-    private static func adaptFeedToCellControllers(
-        forwardingTo controller: FeedViewController,
-        loader: FeedImageDataLoader
-    ) -> ([FeedImage]) -> Void {
-        { [weak controller] feed in
-            controller?.tableModel = feed.map { FeedImageCellController(model: $0, imageLoader: loader) }
-        }
+    // MVVM
+    //    private static func adaptFeedToCellControllers(
+    //        forwardingTo controller: FeedViewController,
+    //        loader: FeedImageDataLoader
+    //    ) -> ([FeedImage]) -> Void {
+    //        { [weak controller] feed in
+    //            controller?.tableModel = feed.map { FeedImageCellController(model: $0, imageLoader: loader) }
+    //        }
+    //    }
+}
+
+// MVP
+private final class FeedViewAdapter: FeedView {
+    private weak var controller: FeedViewController?
+    private var imageLoader: FeedImageDataLoader?
+    
+    init(controller: FeedViewController, imageLoader: FeedImageDataLoader) {
+        self.controller = controller
+        self.imageLoader = imageLoader
     }
+
+    func display(feed: [EssentialFeed.FeedImage]) {
+        controller?.tableModel = feed.map { FeedImageCellController(model: $0, imageLoader: imageLoader) }
+    }
+    
 }
