@@ -9,15 +9,13 @@ public struct FeedUIComposer {
         
         let presentationAdapter = FeedLoaderPresentationAdapter(feedLoader: feedLoader)
         
-        let feedRefreshViewController = FeedRefreshViewController(loadFeed: presentationAdapter.loadFeed)
         let storyBoard = UIStoryboard(name: "Feed", bundle: Bundle(for: FeedViewController.self))
         let feedViewController = storyBoard.instantiateInitialViewController() as! FeedViewController
-        feedViewController.feedRefreshViewController = feedRefreshViewController
-//        let feedViewController = FeedViewController(feedRefreshViewController: feedRefreshViewController)
+        feedViewController.feedRefreshViewController!.loadFeed = presentationAdapter.loadFeed
 
         let presenter = FeedPresenter(
             view: FeedViewAdapter(controller: feedViewController, imageLoader: imageLoader),
-            loadingView: WeakReferenceVirtualProxy(object:  feedRefreshViewController)
+            loadingView: WeakReferenceVirtualProxy(object:  feedViewController.feedRefreshViewController!)
         )
         presentationAdapter.presenter = presenter
 

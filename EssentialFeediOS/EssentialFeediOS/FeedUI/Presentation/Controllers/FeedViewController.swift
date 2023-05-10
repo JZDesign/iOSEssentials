@@ -3,7 +3,7 @@ import Foundation
 import EssentialFeed
 
 public final class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching {
-    var feedRefreshViewController: FeedRefreshViewController? = nil
+    @IBOutlet var feedRefreshViewController: FeedRefreshViewController?
 
     internal var tableModel = [FeedImageCellController]() {
         didSet {
@@ -27,7 +27,7 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     }
     
     private func setupRefreshControl() {
-        refreshControl = feedRefreshViewController?.view
+//        refreshControl = feedRefreshViewController?.view
         feedRefreshViewController?.refresh()
     }
     

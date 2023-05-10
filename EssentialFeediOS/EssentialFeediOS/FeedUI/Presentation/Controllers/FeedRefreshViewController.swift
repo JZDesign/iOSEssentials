@@ -1,14 +1,12 @@
 import UIKit
 
 public final class FeedRefreshViewController: NSObject, FeedLoadingView {
-    let loadFeed: () -> Void
-    private(set) lazy var view: UIRefreshControl = loadView()
+    var loadFeed: () -> Void = {}
+    @IBOutlet var view: UIRefreshControl?
 
-    init(loadFeed: @escaping () -> Void) {
-        self.loadFeed = loadFeed
-    }
+    public override init() {}
     
-    @objc func refresh() {
+    @IBAction func refresh() {
         loadFeed()
     }
     
@@ -16,16 +14,16 @@ public final class FeedRefreshViewController: NSObject, FeedLoadingView {
     
     public func display(_ viewModel: FeedLoadingViewModel) {
         if viewModel.isLoading {
-            view.beginRefreshing()
+            view?.beginRefreshing()
         } else {
-            view.endRefreshing()
+            view?.endRefreshing()
         }
     }
 
     // MARK: - Helpers
-    private func loadView() -> UIRefreshControl {
-        let view = UIRefreshControl()
-        view.addTarget(self, action: #selector(refresh), for: .valueChanged)
-        return view
-    }
+//    private func loadView() -> UIRefreshControl {
+//        let view = UIRefreshControl()
+//        view.addTarget(self, action: #selector(refresh), for: .valueChanged)
+//        return view
+//    }
 }
