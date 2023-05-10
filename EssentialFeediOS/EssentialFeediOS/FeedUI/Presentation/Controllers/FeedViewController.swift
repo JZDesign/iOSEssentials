@@ -3,7 +3,7 @@ import Foundation
 import EssentialFeed
 
 public final class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching {
-    private var feedRefreshViewController: FeedRefreshViewController? = nil
+    var feedRefreshViewController: FeedRefreshViewController? = nil
 
     internal var tableModel = [FeedImageCellController]() {
         didSet {
@@ -17,7 +17,7 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: coder)
     }
     
     public override func viewDidLoad() {

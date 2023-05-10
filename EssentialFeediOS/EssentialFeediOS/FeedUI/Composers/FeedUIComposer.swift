@@ -10,7 +10,10 @@ public struct FeedUIComposer {
         let presentationAdapter = FeedLoaderPresentationAdapter(feedLoader: feedLoader)
         
         let feedRefreshViewController = FeedRefreshViewController(loadFeed: presentationAdapter.loadFeed)
-        let feedViewController = FeedViewController(feedRefreshViewController: feedRefreshViewController)
+        let storyBoard = UIStoryboard(name: "Feed", bundle: Bundle(for: FeedViewController.self))
+        let feedViewController = storyBoard.instantiateInitialViewController() as! FeedViewController
+        feedViewController.feedRefreshViewController = feedRefreshViewController
+//        let feedViewController = FeedViewController(feedRefreshViewController: feedRefreshViewController)
 
         let presenter = FeedPresenter(
             view: FeedViewAdapter(controller: feedViewController, imageLoader: imageLoader),
