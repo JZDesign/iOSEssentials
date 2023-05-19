@@ -136,6 +136,7 @@ My dad once told me, laugh and the world laughs with you, Cry, and I'll give you
                         <connections>
                             <outlet property="dataSource" destination="cFz-3M-cyi" id="ZYD-HE-F5T"/>
                             <outlet property="delegate" destination="cFz-3M-cyi" id="ZhA-hu-aq2"/>
+                            <outlet property="prefetchDataSource" destination="cFz-3M-cyi" id="DLp-Rk-BgG"/>
                         </connections>
                     </tableView>
                     <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="ScO-CI-F0e">

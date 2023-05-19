@@ -1,7 +1,9 @@
 import UIKit
 
 public final class FeedImageCell: UITableViewCell {
-    
+    // finish updating this to match the UIStoryboard setup in this lecture
+    // https://academy.essentialdeveloper.com/courses/447455/lectures/11390253
+    // starting around 13 minutes
     public let feedImageContainer = UIView()
     public let feedImageView = UIImageView()
     public let locationContainer = UIView()
