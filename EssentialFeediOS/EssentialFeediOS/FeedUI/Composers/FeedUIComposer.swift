@@ -24,20 +24,27 @@ public struct FeedUIComposer {
     
 }
 
-private final class MainQueueDispatchDecorator: FeedLoader {
-    private let decoratee: FeedLoader
-    init(decoratee: FeedLoader) {
+private final class MainQueueDispatchDecorator<Decoratee> {
+    private let decoratee: Decoratee
+    
+    init(decoratee: Decoratee) {
         self.decoratee = decoratee
     }
-    func load(completion: @escaping (Result<[FeedImage], Error>) -> Void) {
-        decoratee.load { result in
-            if Thread.isMainThread {
-                completion(result)
-            } else {
-                DispatchQueue.main.async {
-                    completion(result)
-                }
+    
+    func dispatch(completion: @escaping () -> Void) {
+        guard Thread.isMainThread else {
+            return DispatchQueue.main.async {
+                completion()
             }
+        }
+        completion()
+    }
+}
+
+extension MainQueueDispatchDecorator: FeedLoader where Decoratee == FeedLoader {
+    func load(completion: @escaping (Result<[FeedImage], Error>) -> Void) {
+        decoratee.load { [weak self] result in
+            self?.dispatch { completion(result) }
         }
     }
 }
